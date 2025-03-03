@@ -41,7 +41,7 @@ Our objective is to enable the program to optimize plant growth while minimizing
 - Cloud-based data storage and remote access
 
 # Contributors
-JiYoung Nam
-Mauricio Urrego
-Romario Santos Da Silva
-Şükrü Eren Gökırmak
+- JiYoung Nam
+- Mauricio Urrego
+- Romario Santos Da Silva
+- Şükrü Eren Gökırmak
