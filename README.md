@@ -30,7 +30,7 @@ Our objective is to enable the program to optimize plant growth while minimizing
 
 # Features
 - Communication with LILYGO® T-Higrow ESP32 via serial connection (**communication method is subject to change**)
-- Close to Real-time sensor data collection 
+- Close to real-time sensor data collection 
 - Data analysis and visualization 
 - User-friendly interface 
 - Optimized for plant monitoring
