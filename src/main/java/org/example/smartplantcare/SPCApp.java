@@ -1,6 +1,5 @@
-package frontend;
+package org.example.smartplantcare;
 
-import javafx.scene.text.Font;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import javafx.application.Application;

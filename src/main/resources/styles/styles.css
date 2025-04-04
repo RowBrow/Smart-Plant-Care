@@ -1,0 +1,18 @@
+/*@font-face {*/
+/*    font-family: 'Poppins';*/
+/*    src: url('/fonts/Poppins-Regular.ttf');*/
+/*}*/
+
+
+.poppins-italic-text {
+    -fx-font-family: 'Poppins';
+    -fx-font-size: 20px;
+}
+
+.dashboard-button {
+    -fx-background-color: #e7f3e8;
+    -fx-background-radius: 15px; /* More rounded corners */
+    -fx-border-width: 0px; /* Remove border */
+    -fx-font-size: 14px;
+    -fx-padding: 10px 15px;
+}
