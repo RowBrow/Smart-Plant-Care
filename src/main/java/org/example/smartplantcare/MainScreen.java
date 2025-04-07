@@ -1,23 +1,31 @@
 package org.example.smartplantcare;
 
 import javafx.application.Application;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.*;
 
-public class HelloApplication extends Application {
+public class MainScreen extends Application {
+    public MainScreen() throws FileNotFoundException {
+    }
     String style1="-fx-font-family:sans-serif; -fx-font-weight:bold; -fx-font-size: 12px;" ;
+    String style2="-fx-font-family:poppins-italic-text; -fx-font-weight:bold; -fx-font-size: 12px;" ;
     Slider sliderLight =slider();
+
 
     private Slider slider() {
         Slider slider = new Slider();
@@ -37,10 +45,35 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) {
+
+        String fontPath = getClass().getResource("/fonts/Poppins-ThinItalic.ttf").toExternalForm();
+        fontPath = URLDecoder.decode(fontPath, StandardCharsets.UTF_8);
+
+        System.out.println("Font path: " + fontPath); // Debugging
+
+        //Font.loadFont(fontPath, 10);
+
+        //Font.getFamilies().forEach(System.out::println);
+        //We set the CSS classes to the components:
+
+        /*font
+        dashboardButton = new Button("Dashboard", new FontIcon(FontAwesomeSolid.CHART_BAR));
+        dashboardButton.setGraphicTextGap(20);
+        dashboardButton.getStyleClass().add("poppins-italic-text");
+
+        (sideBar).setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        */
+
+        Image logo = new Image(getClass().getResource("/images/logo.png").toExternalForm());
+        ImageView logoImageView = new ImageView(logo);
+
+        logoImageView.setFitWidth(150);  // Resize width
+        logoImageView.setPreserveRatio(true);
+
         VBox left = new VBox();
         left.setPrefSize(200,500);
         left.getChildren().addAll(label("two leafs"),vspace(50));
-        left.getChildren().addAll( navButton.get(0),navButton.get(1),
+        left.getChildren().addAll( logoImageView, navButton.get(0),navButton.get(1),
                 navButton.get(2),navButton.get(3),vspace(300),
                 navButton.get(4),navButton.get(5));
         VBox sliderbox = new VBox(
@@ -55,6 +88,7 @@ public class HelloApplication extends Application {
         HBox root = new HBox(left,right);
         drawCanvas();
         Scene scene = new Scene(root,800,500);
+        scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
         stage.setTitle("Smart Plant Care");
         stage.setScene(scene);
         stage.show();
@@ -62,7 +96,7 @@ public class HelloApplication extends Application {
 
     void drawCanvas(){
         drawText(50,50,25,"Welcome, "); // add user name
-        drawText(450,50,15,"Flowering Plant");
+        drawText(450,50,15,"Flowering Plant"); // selected plants from list should be shown here
         drawText(450,80,10,"Monstera Deliciosa");
         int x0=50,xd=130, sz1=20, sz2=40;
         drawText(x0,200,sz1,"Light");
@@ -80,6 +114,7 @@ public class HelloApplication extends Application {
         gc.fillText(s, x,y);
     }
 
+    // move this part into Fucntions
     Button button(String s){
         Button b = new Button(s);
         b.setPrefSize(150,30);
@@ -93,7 +128,7 @@ public class HelloApplication extends Application {
         return buttons;
     }
     Label label(String s){
-        Label l = new Label(s);l.setPrefSize(100,30); l.setStyle(style1); return l;
+        Label l = new Label(s); l.setPrefSize(100,30); l.setStyle(style2); return l;
     }
     HBox hspace(int i) {
         HBox hbox = new HBox(); hbox.setPrefSize(i,2); return hbox;
