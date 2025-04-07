@@ -31,6 +31,11 @@ public class MainScreen extends Application {
         statusPanel.drawStatus();
 
         //We merge the status panel and the slider panel
+
+        //With Dashboard:
+        //VBox right = new VBox(canvas,ChartPanel.createChartPanel());
+        //With SliderPanel
+
         VBox right = new VBox(canvas,SliderPanel.sliderPanel());
         right.setPrefSize(600,500);
 
