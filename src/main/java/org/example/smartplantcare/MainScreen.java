@@ -1,6 +1,7 @@
 package org.example.smartplantcare;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -21,10 +22,9 @@ public class MainScreen extends Application {
 
     @Override
     public void start(Stage stage) {
-
-
         //LeftBar
         VBox left = LeftBar.createLeft();
+        left.setPadding(new Insets(5)); // padding
 
         //Status Panel
         StatusPanel statusPanel = new StatusPanel(canvas);
@@ -34,13 +34,14 @@ public class MainScreen extends Application {
 
         //With Dashboard:
         //VBox right = new VBox(canvas,ChartPanel.createChartPanel());
-        //With SliderPanel
 
+        //With SliderPanel
         VBox right = new VBox(canvas,SliderPanel.sliderPanel());
         right.setPrefSize(600,500);
 
         //We merge all components
         HBox root = new HBox(left,right);
+        root.setMargin(left, new Insets(20));  // margin
 
         Scene scene = new Scene(root,800,500);
         scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());

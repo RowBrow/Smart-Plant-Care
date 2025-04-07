@@ -9,23 +9,7 @@ class Model{
       return Arrays.asList(
           "BK1 Empirical Data",
           "BK2 Experimental Methods",
-          "BK3 Theory of Natural Science",
-          "Logic and Discrete Mathematics",
-          "Functional Biology – Zoology",
-          "Linear Algebra",
-          "Organic Chemistry",
-          "Biological Chemistry",
-          "Statistical Models",
-          "Functional Programming and Language Implementations",
-          "Classical Mechanics",
-          "Environmental Science",
-          "Cell Biology",
-          "Functional biology – Botany",
-          "Supplementary Physics",
-          "Calculus",
-          "The Chemical Reaction",
-          "Scientific Computing",
-          "Energy and Climate Changes"
+          "BK3 Theory of Natural Science"
           );
       }
       if(base.equals("HumTek")){
@@ -33,16 +17,7 @@ class Model{
           "Design og Konstruktion I+Workshop" ,
           "Subjektivitet, Teknologi og Samfund I" ,
           "Teknologiske systemer og artefakter I" ,
-          "Videnskabsteori" ,
-          "Design og Konstruktion II+Workshop" ,
-          "Subjektivitet, Teknologi og Samfund II" ,
-          "Bæredygtige teknologier" ,
-          "Kunstig intelligens" ,
-          "Medier og teknologi - datavisualisering" ,
-          "Teknologiske Systemer og Artefakter II - Sundhedsteknologi" ,
-          "Den (in)humane storby" ,
-          "Interactive Design in the Field" ,
-          "Organisation og ledelse af designprocesser"
+          "Videnskabsteori"
       );
     }
     return null;
