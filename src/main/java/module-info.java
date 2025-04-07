@@ -6,6 +6,7 @@ module org.example.smartplantcare {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires org.kordamp.ikonli.fontawesome5;
+    requires java.desktop;
 
     opens org.example.smartplantcare to javafx.fxml;
     exports org.example.smartplantcare;
