@@ -11,7 +11,13 @@ import static org.example.smartplantcare.HelperMethods.label;
 import static org.example.smartplantcare.HelperMethods.vspace;
 
 public class LeftBar {
-    public static VBox createLeft(String style, Image logo, List<Button> navButton) {
+
+    static Image logo = new Image(LeftBar.class.getResource("/images/logo.png").toExternalForm());
+    public static String style="-fx-font-family:poppins-italic-text; -fx-font-weight:bold; -fx-font-size: 12px;" ;
+    public static List<Button> navButton = HelperMethods.buttons("DashBoard","AutoMode","Advanced Mode","Plant list","Settings","FeedBack");
+
+    public static VBox createLeft() {
+
         ImageView logoImageView = new ImageView(logo);
         logoImageView.setFitWidth(150);  // Resize width
         logoImageView.setPreserveRatio(true);
@@ -27,5 +33,7 @@ public class LeftBar {
 
         return left;
     }
+
+
 }
 
