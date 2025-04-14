@@ -23,19 +23,20 @@ Our objective is to enable the program to optimize plant growth while minimizing
 
 # Technologies Used
 - Java (Main development language)
-- Serial Communication (for interfacing with microcontrollers)
-- MQTT/HTTP Protocols (**communication method is subject to change**)
+- MQTT/HTTP Protocols
 - JavaFX for creating the GUI
-- PostgreSQL (for storing sensor data)
+- SQLite (for storing sensor data)
 
-# Features
-- Communication with LILYGO® T-Higrow ESP32 via serial connection (**communication method is subject to change**)
+# Roadmap
+
+## Features
+- Communication with LILYGO® T-Higrow ESP32 via MQTT protocol
 - Close to real-time sensor data collection 
 - Data analysis and visualization 
 - User-friendly interface 
 - Optimized for plant monitoring
 
-# Possible Future Improvements
+## Possible Future Improvements
 - Full integration with additional hardware components
 - Implementing AI-based optimization for plant growth 
 - Cloud-based data storage and remote access
