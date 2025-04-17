@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 
 public class ChartPanel {
-    private static final double TILE_WIDTH = 150;
+    private static final double TILE_WIDTH = 400;
     private static final double TILE_HEIGHT = 400;
 
 

@@ -16,6 +16,11 @@ public class HelperMethods {
 
     public static Button button(String s){
         Button b = new Button(s);
+        if(s.equals("DashBoard")){
+            b.setOnAction(e -> MainScreen.switchScene(MainScreen.getChartPanel()));
+        } else if (s.equals("Advanced Mode")) {
+            b.setOnAction(e -> MainScreen.switchScene(MainScreen.getSliderPanel()));
+        }
         b.setPrefSize(150,30);
         b.setWrapText(true);
         b.setStyle(style1);
@@ -23,7 +28,7 @@ public class HelperMethods {
     }
     public static List<Button> buttons(String ... strs){
         List<Button> buttons = new ArrayList<>();
-        for(String s:strs)buttons.add(button(s));
+        for(String s:strs) buttons.add(button(s));
         return buttons;
     }
 

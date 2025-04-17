@@ -58,6 +58,6 @@ public class SliderPanel {
         HBox buttonbox = new HBox(hspace(400), buttonProfile, buttonSaveProfile, hspace(50));
         buttonbox.setPrefSize(600, 50);
 
-        return new VBox(sliderbox,buttonbox);
+        return new VBox(vspace(80), sliderbox,buttonbox);
     }
 }
