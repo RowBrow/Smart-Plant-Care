@@ -23,6 +23,7 @@ public class MainScreen extends Application {
     private static Pane chartPanel;
     private static BorderPane right = new BorderPane();
     private static VBox left;
+    private StatusPanel statusPanel;
     @Override
     public void start(Stage stage) throws InterruptedException {
 
@@ -31,8 +32,8 @@ public class MainScreen extends Application {
         left = LeftBar.createLeft();
 
         //Status Panel
-        StatusPanel statusPanel = new StatusPanel(canvas);
-        statusPanel.drawStatus();
+        statusPanel = new StatusPanel(canvas);
+        statusPanel.drawStatus(0,0,0,0);
 
         //We merge the status panel and the slider panel
 
@@ -42,9 +43,13 @@ public class MainScreen extends Application {
         //Slider
         sliderPanel = SliderPanel.sliderPanel();
 
-        right.setTop(canvas);
+        //Dummy button to change values randomly
+        Button button1 = new Button("Change");
+        button1.setOnAction(e -> {redrawValues();});
+        right.setTop(button1);
+        right.setCenter(canvas);
         //We start with Dashboard
-        right.setCenter(sliderPanel);
+        right.setBottom(sliderPanel);
         right.setPrefSize(600,600);
 
 
@@ -60,7 +65,7 @@ public class MainScreen extends Application {
     }
 
     public static void switchScene(Pane pane) {
-        right.setCenter(pane);
+        right.setBottom(pane);
         right.setPrefSize(600,500);
     }
 
@@ -74,7 +79,18 @@ public class MainScreen extends Application {
         return chartPanel;
     }
 
+    public void redrawValues(){
+        Random rand = new Random();
+        int w = rand.nextInt(100);
+        int x = rand.nextInt(100);
+        int y = rand.nextInt(100);
+        int z = rand.nextInt(100);
+        statusPanel.drawStatus(w,x,y,z);
+    }
+
     public static void main(String[] args) {
         launch();
     }
+
+
 }
