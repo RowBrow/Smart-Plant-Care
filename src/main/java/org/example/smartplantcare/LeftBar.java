@@ -25,7 +25,7 @@ public class LeftBar {
         VBox left = new VBox();
         left.setPrefSize(200, 500);
         left.getChildren().addAll(
-                label("two leafs"), vspace(50),
+                vspace(50),
                 logoImageView,
                 navButton.get(0), navButton.get(1),
                 navButton.get(2), navButton.get(3), vspace(300),
