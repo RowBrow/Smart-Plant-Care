@@ -43,6 +43,8 @@ public class HelperMethods {
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setShowTickLabels(true);
+        slider.setMinorTickCount(0);
+        slider.setSnapToTicks(true);
         slider.setPrefSize(400,50);
         return slider;
     }
