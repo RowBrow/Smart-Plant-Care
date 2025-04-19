@@ -9,7 +9,6 @@ import javafx.scene.text.FontWeight;
 
 public class StatusPanel {
 
-    private int lightValue = 0;
     private final Canvas canvas;
 
     public StatusPanel(Canvas canvas){
