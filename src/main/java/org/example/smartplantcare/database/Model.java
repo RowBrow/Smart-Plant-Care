@@ -1,7 +1,16 @@
-package org.example.smartplantcare;
+package org.example.smartplantcare.database;
 import java.util.*;
 
-class Model{
+public class Model{
+
+  MyDB db = new MyDB();
+
+  public Measurement getLatestData() {
+    return db.queryOneMeasurement(
+            "SELECT * FROM measurement\n" +
+            "ORDER BY datetime DESC LIMIT 1;");
+  }
+
   List<String> baseProgram(){return Arrays.asList("NatBach","HumTek");}
   List<String> subjectModule(){return Arrays.asList("Computer Science","Informatik","Astrology");}
   List<String> baseCourse(String base){

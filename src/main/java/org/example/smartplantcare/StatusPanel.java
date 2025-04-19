@@ -15,7 +15,7 @@ public class StatusPanel {
         this.canvas=canvas;
     }
 
-    public void drawStatus(int light, int temperature, int water, int humidity){
+    public void drawStatus(float light, float temperature, float water, float humidity){
         GraphicsContext gc=canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 

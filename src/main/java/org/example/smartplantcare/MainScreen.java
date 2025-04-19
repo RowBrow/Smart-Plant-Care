@@ -4,13 +4,15 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.util.Duration;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import org.example.smartplantcare.database.Measurement;
+import org.example.smartplantcare.database.Model;
 
 import java.io.FileNotFoundException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class MainScreen extends Application {
@@ -25,14 +27,24 @@ public class MainScreen extends Application {
     private static VBox left;
     private StatusPanel statusPanel;
     @Override
+
     public void start(Stage stage) throws InterruptedException {
+
+        Timeline simulateSensor = new Timeline(
+                new KeyFrame(Duration.seconds(60), e -> {
+                    updateMeasurement();
+                })
+        );
+        simulateSensor.setCycleCount(Timeline.INDEFINITE);
+        simulateSensor.play();
+
 
         //LeftBar
         left = LeftBar.createLeft();
 
         //Status Panel
         statusPanel = new StatusPanel(canvas);
-        statusPanel.drawStatus(0,0,0,0);
+        updateMeasurement();
 
         //We merge the status panel and the slider panel
 
@@ -44,7 +56,7 @@ public class MainScreen extends Application {
 
         //Dummy button to change values randomly
         Button button1 = new Button("Change");
-        button1.setOnAction(e -> {redrawValues();});
+        button1.setOnAction(e -> {updateMeasurement();});
         right.setTop(button1);
         right.setCenter(canvas);
         //We start with Dashboard
@@ -78,16 +90,18 @@ public class MainScreen extends Application {
         return chartPanel;
     }
 
-    public void redrawValues(){
-        Random rand = new Random();
-        int w = rand.nextInt(100);
-        int x = rand.nextInt(100);
-        int y = rand.nextInt(100);
-        int z = rand.nextInt(100);
-        statusPanel.drawStatus(w,x,y,z);
+    public void updateMeasurement() {
+        Measurement measurement = db.getLatestData();
+        statusPanel.drawStatus(
+                measurement.getLight(),
+                measurement.getTemp(),
+                measurement.getWater(),
+                measurement.getHumidity()
+        );
     }
 
     public static void main(String[] args) {
+
         launch();
     }
 
