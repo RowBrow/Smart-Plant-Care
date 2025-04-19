@@ -66,7 +66,7 @@ public class MyDB {
                 float temp = rs.getFloat("temp");
                 float water = rs.getFloat("water");
                 float humidity = rs.getFloat("humidity");
-
+                //앞에서 빈 measurement 가져오고 여기서 값 입력
                 res = new Measurement(datetime, light, temp, water, humidity);
             }
         } catch (SQLException e) {
