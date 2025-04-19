@@ -19,6 +19,13 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Registration extends Application {
     @Override
     public void start(Stage stage) {
@@ -131,6 +138,37 @@ public class Registration extends Application {
         buttonRegister.setStyle(
                 "-fx-background-color: darkslateblue; -fx-textfill: white;");
 
+        buttonRegister.setOnAction(e -> {
+            String name = nameText.getText();
+            LocalDate dob = datePicker.getValue();
+            String gender = maleRadio.isSelected() ? "Male" : "Female";
+            boolean reservation = yes.isSelected();
+            List<String> techList = new ArrayList<>();
+            if (javaCheckBox.isSelected()) techList.add("Java");
+            if (dotnetCheckBox.isSelected()) techList.add("DotNet");
+            String technologies = String.join(",", techList);
+            String education = educationListView.getSelectionModel().getSelectedItem();
+            String location = locationchoiceBox.getValue().toString();
+
+            // 예시: DB에 저장
+            try (Connection conn = DBConnection.getConnection()) {
+                String sql = "INSERT INTO users (name, dob, gender, reservation, technologies, education, location) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setString(1, name);
+                stmt.setDate(2, Date.valueOf(dob));
+                stmt.setString(3, gender);
+                stmt.setBoolean(4, reservation);
+                stmt.setString(5, technologies);
+                stmt.setString(6, education);
+                stmt.setString(7, location);
+                stmt.executeUpdate();
+                System.out.println("회원 정보 저장 완료");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
         nameLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
         dobLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
         genderLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
@@ -154,8 +192,8 @@ public class Registration extends Application {
         //Displaying the contents of the stage
         stage.show();
     }
-    public static void main(String args[]){
+    /*public static void main(String args[]){
         launch(args);
-    }
+    }*/
 }
 // from https://www.tutorialspoint.com/javafx/javafx_ui_controls.htm

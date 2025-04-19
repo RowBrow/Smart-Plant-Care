@@ -6,6 +6,7 @@ module org.example.smartplantcare {
     requires org.kordamp.bootstrapfx.core;
     requires org.kordamp.ikonli.fontawesome5;
     requires eu.hansolo.tilesfx;
+    requires java.sql;
 
     opens org.example.smartplantcare to javafx.fxml;
     exports org.example.smartplantcare;

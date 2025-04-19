@@ -13,6 +13,8 @@ public class StatusPanel {
         this.canvas=canvas;
     }
 
+
+
     public void drawStatus(){
         drawText(50,50,25,"Welcome, "); // add user name
         drawText(450,50,15,"Flowering Plant"); // selected plants from list should be shown here

@@ -26,7 +26,6 @@ public class MainScreen extends Application {
     @Override
     public void start(Stage stage) throws InterruptedException {
 
-
         //LeftBar
         left = LeftBar.createLeft();
 
