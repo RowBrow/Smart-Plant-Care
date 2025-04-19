@@ -15,7 +15,7 @@ import java.util.*;
 
 public class MainScreen extends Application {
     public MainScreen() throws FileNotFoundException {  }
-
+    Model db = new Model();
 
     public static Canvas canvas = new Canvas(600,300);
     private static BorderPane borderPane = new BorderPane();

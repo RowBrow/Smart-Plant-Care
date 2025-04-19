@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
+import org.example.smartplantcare.database.DBConnection;
 
 import java.sql.Connection;
 import java.sql.Date;

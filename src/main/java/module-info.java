@@ -10,4 +10,6 @@ module org.example.smartplantcare {
 
     opens org.example.smartplantcare to javafx.fxml;
     exports org.example.smartplantcare;
+    exports org.example.smartplantcare.database;
+    opens org.example.smartplantcare.database to javafx.fxml;
 }

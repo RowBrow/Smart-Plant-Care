@@ -1,4 +1,4 @@
-package org.example.smartplantcare;
+package org.example.smartplantcare.database;
 
 
 import java.sql.Connection;

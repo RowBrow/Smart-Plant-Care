@@ -1,9 +1,8 @@
-package org.example.smartplantcare;
+package org.example.smartplantcare.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 
 // connecting SQLite, creating TABLE, and saving/finding userInfo from DB
