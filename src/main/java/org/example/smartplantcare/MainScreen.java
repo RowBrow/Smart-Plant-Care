@@ -61,14 +61,14 @@ public class MainScreen extends Application {
         right.setCenter(canvas);
         //We start with Dashboard
         right.setBottom(sliderPanel);
-        right.setPrefSize(600,600);
+        right.setPrefSize(800,800);
 
 
         //We merge leftBar and Dashboard
         borderPane.setLeft(left);
         borderPane.setCenter(right);
 
-        Scene scene = new Scene(borderPane,800,600);
+        Scene scene = new Scene(borderPane,1000,800);
         scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
         stage.setTitle("Smart Plant Care");
         stage.setScene(scene);
@@ -77,7 +77,7 @@ public class MainScreen extends Application {
 
     public static void switchScene(Pane pane) {
         right.setBottom(pane);
-        right.setPrefSize(600,500);
+        right.setPrefSize(800,700);
     }
 
     //Return left panel

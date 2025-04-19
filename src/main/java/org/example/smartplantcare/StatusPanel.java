@@ -20,8 +20,8 @@ public class StatusPanel {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         drawText(50,50,25,"Welcome, "); // add user name
-        drawText(450,50,15,"Flowering Plant"); // selected plants from list should be shown here
-        drawText(450,80,10,"Monstera Deliciosa");
+        drawText(450,50,17,"Flowering Plant"); // selected plants from list should be shown here
+        drawText(450,80,15,"Monstera Deliciosa");
 
         int x0=50,xd=130, sz1=20, sz2=40;
         drawText(x0,200,sz1,"Light");

@@ -24,6 +24,10 @@ public class SliderPanel {
     public static Label valueWater = new Label(" ");
 
     static {
+        valueLight.setStyle("-fx-font-size: 18px;");
+        valueTemp.setStyle("-fx-font-size: 18px;");
+        valueWater.setStyle("-fx-font-size: 18px;");
+
         sliderLight.valueProperty().addListener(
                 new ChangeListener<Number>() {
                     public void changed(ObservableValue<? extends Number>

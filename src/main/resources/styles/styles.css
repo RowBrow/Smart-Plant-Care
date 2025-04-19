@@ -16,3 +16,19 @@
     -fx-font-size: 14px;
     -fx-padding: 10px 15px;
 }
+
+.chart{
+    -fx-font-size:16px;
+}
+
+.axis-label {
+    -fx-font-size: 16px;
+}
+
+.axis-tick-label,.chart-axis {
+    -fx-font-size: 14px;
+}
+
+.slider {
+    -fx-font-size: 18px;
+}

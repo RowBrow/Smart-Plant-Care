@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HelperMethods {
-    public static String style1="-fx-font-family:sans-serif; -fx-font-weight:bold; -fx-font-size: 12px;" ;
+    public static String style1="-fx-font-family:sans-serif; -fx-font-weight:bold; -fx-font-size: 15px;" ;
 
     public static Button button(String s){
         Button b = new Button(s);
@@ -33,7 +33,7 @@ public class HelperMethods {
     }
 
     public static Label label(String s){
-        Label l = new Label(s); l.setPrefSize(100,30); l.setStyle(style1); return l;
+        Label l = new Label(s); l.setPrefSize(150,60); l.setStyle(style1); return l;
     }
     public static HBox hspace(int i) {
         HBox hbox = new HBox(); hbox.setPrefSize(i,2); return hbox;
@@ -44,13 +44,13 @@ public class HelperMethods {
     }
 
     public static Slider slider() {
-        Slider slider = new Slider();
+        Slider slider = new Slider(0,100,0);
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setShowTickLabels(true);
         slider.setMinorTickCount(0);
-        slider.setSnapToTicks(true);
-        slider.setPrefSize(400,50);
+        slider.setSnapToTicks(false);
+        slider.setPrefSize(500,150);
         return slider;
     }
 }
