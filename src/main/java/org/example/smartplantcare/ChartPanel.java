@@ -10,7 +10,9 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -22,10 +24,20 @@ import javafx.stage.Stage;
 import java.sql.*;
 import java.util.Arrays;
 
+import static org.example.smartplantcare.HelperMethods.vspace;
+
 public class ChartPanel {
+    public static Button lightChart = HelperMethods.button("Light");
+    public static Button tempChart = HelperMethods.button("Temp");
+    public static Button waterChart = HelperMethods.button("Water");
+    public static Button humidChart = HelperMethods.button("Humid");
+
+//    lightChart.setOnAction(e -> {createChartPanel();});  // createChartPanel should be replaced into each chart
 
     private static final double TILE_WIDTH = 400;
     private static final double TILE_HEIGHT = 400;
+
+    private static StackPane chartArea = new StackPane(); //place for chart
 
     public static XYChart.Series<String, Number> getLightDataFromDB() {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -61,7 +73,7 @@ public class ChartPanel {
         return series;
     }
 
-    public static StackPane createChartPanel() {
+    public static VBox createChartPanel() {
         XYChart.Series<String, Number> series = getLightDataFromDB();
 
         CategoryAxis xAxis = new CategoryAxis();
@@ -71,7 +83,6 @@ public class ChartPanel {
                 "0:00 AM", "2:00 AM","4:00 AM", "6:00 AM", "8:00 AM",
                 "10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM","8:00 PM", "10:00 PM","12:00 PM"
         ));
-
         xAxis.setTickLabelFont(Font.font("Arial", 14));
 */
         Tile areaChartTile = TileBuilder.create()
@@ -90,6 +101,6 @@ public class ChartPanel {
                 .build();
 
         StackPane root = new StackPane(areaChartTile);
-        return root;
+        return new VBox(new HBox(lightChart, tempChart, waterChart, humidChart), vspace(30), root);
     }
 }
