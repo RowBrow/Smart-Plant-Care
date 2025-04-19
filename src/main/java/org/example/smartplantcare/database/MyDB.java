@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class MyDB {
     Connection conn = null;
+
     public MyDB(){
         if(conn==null)open();
     }
@@ -46,8 +47,8 @@ public class MyDB {
         }
     }
 
-    public ArrayList<String> query(String query, String fld) {
-        ArrayList<String> res = new ArrayList<>();
+    public Measurement queryOneMeasurement(String query) {
+        Measurement res = new Measurement();
         if (conn == null) open();
         if (conn == null) {
             System.out.println("No connection");
@@ -57,20 +58,29 @@ public class MyDB {
         try {
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
+
             while (rs.next()) {
-                String name = rs.getString(fld);
-                res.add(name);
+
+                String datetime = rs.getString("datetime");
+                float light = rs.getFloat("light");
+                float temp = rs.getFloat("temp");
+                float water = rs.getFloat("water");
+                float humidity = rs.getFloat("humidity");
+
+                res = new Measurement(datetime, light, temp, water, humidity);
             }
         } catch (SQLException e) {
-            System.out.println("Error in statement: " + query + " " + fld);
+            System.out.println("Error in statement: " + query);
         }
         try {
             if (stmt != null) {
                 stmt.close();
             }
         } catch (SQLException e) {
-            System.out.println("Error closing statement: " + query + " " + fld);
+            System.out.println("Error closing statement: " + query );
         }
         return res;
     }
+
+
 }
