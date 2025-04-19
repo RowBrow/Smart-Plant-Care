@@ -60,4 +60,6 @@ public class SliderPanel {
 
         return new VBox(vspace(80), sliderbox,buttonbox);
     }
+
+
 }
