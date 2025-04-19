@@ -30,14 +30,14 @@ public class MainScreen extends Application {
 
     public void start(Stage stage) throws InterruptedException {
 
+        //updating values every 30 seconds
         Timeline simulateSensor = new Timeline(
-                new KeyFrame(Duration.seconds(60), e -> {
+                new KeyFrame(Duration.seconds(30), e -> {
                     updateMeasurement();
                 })
         );
         simulateSensor.setCycleCount(Timeline.INDEFINITE);
         simulateSensor.play();
-
 
         //LeftBar
         left = LeftBar.createLeft();

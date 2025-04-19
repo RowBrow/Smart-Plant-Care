@@ -8,6 +8,7 @@ public class Measurement {
     private float humidity;
 
     public Measurement() {
+
     }
 
     public Measurement(String datetime, float light, float temp, float water, float humidity) {
@@ -37,8 +38,6 @@ public class Measurement {
     public float getHumidity() {
         return humidity;
     }
-
-
 
     // Optional: add getters, setters, toString(), etc.
 }
