@@ -1,12 +1,15 @@
 package org.example.smartplantcare;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ChangeListener;
+
+import java.awt.*;
 
 import static org.example.smartplantcare.HelperMethods.*;
 import static org.example.smartplantcare.MainScreen.*;
@@ -16,12 +19,16 @@ public class SliderPanel {
     public static Slider sliderTemp = HelperMethods.slider();
     public static Slider sliderWater = HelperMethods.slider();
 
-    public static Button buttonProfile = HelperMethods.button("Profiles");
-    public static Button buttonSaveProfile = HelperMethods.button("Save to profiles");
+    public static Button buttonProfile = HelperMethods.button("Update profile");
+    public static Button buttonSaveProfile = HelperMethods.button("Save to new profiles");
 
     public static Label valueLight = new Label(" ");
     public static Label valueTemp = new Label(" ");
     public static Label valueWater = new Label(" ");
+
+    public static TextField numWater = new TextField();
+    public static ComboBox comboBox = new ComboBox();
+
 
     static {
         valueLight.setStyle("-fx-font-size: 18px;");
@@ -57,12 +64,15 @@ public class SliderPanel {
                 new HBox(label("Light"), sliderLight, valueLight),
                 new HBox(label("Temp"), sliderTemp, valueTemp),
                 new HBox(label("Water"), sliderWater,valueWater));
+
         sliderbox.setPrefSize(600, 150);
 
         HBox buttonbox = new HBox(hspace(400), buttonProfile, buttonSaveProfile, hspace(50));
         buttonbox.setPrefSize(600, 50);
 
         return new VBox(vspace(80), sliderbox,buttonbox);
+
+
     }
 
 

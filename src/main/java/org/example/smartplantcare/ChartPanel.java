@@ -53,12 +53,12 @@ public class ChartPanel {
                 String datetime = rs.getString("datetime");
                 int light = rs.getInt("light");
 
-/*              // 시간 정보만 추출 (예: "05:12 PM")
+/*              // // Extract only the time information (e.g. "05:12 PM")
                 String timeLabel = datetime.substring(9);  // "hh:mm:ss AM/PM" 추출
                 series.getData().add(new XYChart.Data<>(timeLabel, light));
-                // datetime 형식: "20250419 05:00:00 PM"
+                // datetime format: "20250419 05:00:00 PM"
 */
-                //방법1: 시간 문자열 추출 : 공백 이후 문자열
+                //Extract time string: string after space
                 String[] parts = datetime.split(" ");
                 String timeLabel = (parts.length >= 3) ? parts[1].substring(0, 5) + " " + parts[2] : datetime;
 
@@ -78,7 +78,7 @@ public class ChartPanel {
 
         CategoryAxis xAxis = new CategoryAxis();
 
-        // 필요한 라벨만 리스트에 추가
+        // Add only the labels you need to the list
 /*      xAxis.setCategories(FXCollections.observableArrayList(
                 "0:00 AM", "2:00 AM","4:00 AM", "6:00 AM", "8:00 AM",
                 "10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM","8:00 PM", "10:00 PM","12:00 PM"
