@@ -10,7 +10,6 @@
 #define uS_TO_S_FACTOR 1000000LL
 
 unsigned long now;
-int DEEPSLEEP_SECONDS = 1800;
 
 // Set up WiFi and MQTT clients
 WiFiClient wifiClient;
@@ -31,8 +30,8 @@ static char celsiusTemp[7];
 static char humidityTemp[7];
 
 // Set up the credentials for the WiFi
-const char* SSID = "Kolibrien";
-const char* PASSWORD = "hammerhead";
+const char* SSID = "RUC-IOT";
+const char* PASSWORD = "GiHa2638La";
 const int MAX_CONNECTION_TRIES = 20;
 
 // Configure for selected MQTT broker
@@ -171,8 +170,4 @@ void sensorsData(char* body){
   strcat(body, "\",\"temperature\":\"");
   strcat(body, celsiusTemp);
   strcat(body, "\"}");
-
-  if(lightlevel<100){
-    DEEPSLEEP_SECONDS = 10800;
-  }
 }
