@@ -1,6 +1,7 @@
 package org.example.smartplantcare;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -9,7 +10,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ChangeListener;
 
 import static org.example.smartplantcare.HelperMethods.*;
-import static org.example.smartplantcare.MainScreen.*;
+
+import java.awt.*;
+import java.util.List;
 
 public class SliderPanel {
     public static Slider sliderLight = HelperMethods.slider();
@@ -22,6 +25,10 @@ public class SliderPanel {
     public static Label valueLight = new Label(" ");
     public static Label valueTemp = new Label(" ");
     public static Label valueWater = new Label(" ");
+
+    public static TextField numWater = new TextField();
+    public static ComboBox<String> combo = new ComboBox();
+    public static List<String> list = List.of("a month","a week", "a day");
 
     static {
         valueLight.setStyle("-fx-font-size: 18px;");
@@ -50,6 +57,8 @@ public class SliderPanel {
                         valueWater.setText(String.valueOf(newValue.intValue()));
                     }
                 });
+
+        combo.getItems().addAll(list);
     }
 
     public static VBox sliderPanel() {  // sPanel, buttonbox
@@ -64,6 +73,4 @@ public class SliderPanel {
 
         return new VBox(vspace(80), sliderbox,buttonbox);
     }
-
-
 }

@@ -14,44 +14,45 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.example.smartplantcare.database.Measurement;
 import org.example.smartplantcare.database.Model;
 
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import org.json.*;
 
 public class MainScreen extends Application {
-    public MainScreen() throws FileNotFoundException {  }
-    Model db = new Model();
+    public MainScreen() {}
+    static Model db = new Model();
 
-    public static Canvas canvas = new Canvas(600,300);
+    public static Canvas canvas = new Canvas(700,300);
     private static BorderPane borderPane = new BorderPane();
     private static VBox sliderPanel;
     private static Pane chartPanel;
     private static BorderPane right = new BorderPane();
     private static VBox left;
     private StatusPanel statusPanel;
-    @Override
 
+    @Override
     public void start(Stage stage) throws InterruptedException {
         //updating values every 30 seconds
         Timeline simulateSensor = new Timeline(
-                new KeyFrame(Duration.seconds(30), e -> {
+                new KeyFrame(Duration.seconds(1), e -> {
                     updateMeasurement();
                 })
         );
         simulateSensor.setCycleCount(Timeline.INDEFINITE);
         simulateSensor.play();
 
-        //LeftBar
+        // LeftBar
         left = LeftBar.createLeft();
 
-        //Status Panel
+        // Status Panel
         statusPanel = new StatusPanel(canvas);
         updateMeasurement();
 
-        //We merge the status panel and the slider panel
+        // We merge the status panel and the slider panel
 
-        //Dashboard:
-        chartPanel = ChartPanel.createChartPanel();
+        // Dashboard:
+        chartPanel = new ChartPanel();
 
         //Slider
         sliderPanel = SliderPanel.sliderPanel();
@@ -93,12 +94,14 @@ public class MainScreen extends Application {
 
     public void updateMeasurement() {
         Measurement measurement = db.getLatestData();
-        statusPanel.drawStatus(
-                measurement.getLight(),
-                measurement.getTemp(),
-                measurement.getWater(),
-                measurement.getHumidity()
-        );
+        if (measurement != null) {
+            statusPanel.drawStatus(
+                    measurement.getLight(),
+                    measurement.getTemp(),
+                    measurement.getWater(),
+                    measurement.getHumidity()
+            );
+        }
     }
 
     public static void main(String[] args) {
@@ -140,6 +143,19 @@ public class MainScreen extends Application {
                 @Override
                 public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
                     System.out.println(topic + " : " + new String(mqttMessage.getPayload()));
+                    JSONObject json = new JSONObject(new String(mqttMessage.getPayload()));
+                    int water = json.getInt("water");
+                    float humidity = json.getFloat("humidity");
+                    float temperature = json.getFloat("temperature");
+                    int light = json.getInt("light");
+                    String deviceId = json.getString("deviceId");
+
+                    LocalDateTime now = LocalDateTime.now();
+                    String standardizedNow = now.format(DateTimeFormatter.ISO_DATE_TIME);
+
+                    Measurement measurement = new Measurement(standardizedNow, light, temperature, water, humidity);
+
+                    db.insertMeasurement(measurement);
                 }
 
                 @Override
@@ -153,5 +169,9 @@ public class MainScreen extends Application {
 
         // Launch the JavaFX application
         launch(args);
+
+        // Close the program when the UI is closed
+        // using the close button
+        System.exit(0);
     }
 }

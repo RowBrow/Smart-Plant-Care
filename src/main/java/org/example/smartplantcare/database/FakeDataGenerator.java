@@ -22,30 +22,28 @@ public class FakeDataGenerator {
     public static void insertFakeData(Connection conn) throws SQLException {
 
         Statement stmt = conn.createStatement();
-        stmt.execute("DELETE FROM plantData");  // 모든 행 삭제
+        stmt.execute("DELETE FROM measurement");
 
-        String insertSQL = "INSERT OR IGNORE INTO plantData (datetime, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?)";
+        String insertSQL = "INSERT OR IGNORE INTO measurement (datetime, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement pstmt = conn.prepareStatement(insertSQL);
         Random rand = new Random();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd hh:mm:ss a");
-
-
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
         // 1. 2025-04-19 17:00:00 ~ 17:59:59 → 10개
         LocalDateTime baseTime1 = LocalDateTime.of(2025, 4, 19, 17, 0);
         for (int i = 0; i < 10; i++) {
-            LocalDateTime timestamp = baseTime1.plusMinutes(i * 6); // 6분 간격
+            LocalDateTime timestamp = baseTime1.plusMinutes(i * 6); // every 6 minutes
             insertRow(pstmt, timestamp, rand, formatter);
         }
 
         // 2. 2025-04-18 17:00:00 ~ 2025-04-19 17:00:00 → 24개
         LocalDateTime baseTime2 = LocalDateTime.of(2025, 4, 18, 17, 0);
         for (int i = 0; i < 24; i++) {
-            LocalDateTime timestamp = baseTime2.plusHours(i); // 1시간 간격
+            LocalDateTime timestamp = baseTime2.plusHours(i); // every 1 hours
             insertRow(pstmt, timestamp, rand, formatter);
         }
 
-        // 3. 2025-04-12 17:00:00 ~ 2025-04-19 17:00:00 → 각 날짜마다 24개
+        // 3. 2025-04-12 17:00:00 ~ 2025-04-19 17:00:00 → 24 for each date
         for (int d = 12; d <= 18; d++) {
             LocalDateTime base = LocalDateTime.of(2025, 4, d, 0, 0);
             for (int h = 0; h < 24; h++) {
@@ -66,7 +64,6 @@ public class FakeDataGenerator {
 
         pstmt.executeUpdate();
         System.out.println("Inserted: " + timestamp.format(formatter));
-
     }
 }
 

@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 
 import java.util.List;
 
-import static org.example.smartplantcare.HelperMethods.label;
 import static org.example.smartplantcare.HelperMethods.vspace;
 
 public class LeftBar {
