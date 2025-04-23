@@ -15,6 +15,7 @@ import org.example.smartplantcare.database.Measurement;
 import org.example.smartplantcare.database.Model;
 
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.*;
 
 public class MainScreen extends Application {
@@ -31,7 +32,6 @@ public class MainScreen extends Application {
     @Override
 
     public void start(Stage stage) throws InterruptedException {
-
         //updating values every 30 seconds
         Timeline simulateSensor = new Timeline(
                 new KeyFrame(Duration.seconds(30), e -> {
@@ -62,9 +62,8 @@ public class MainScreen extends Application {
         right.setTop(button1);
         right.setCenter(canvas);
         //We start with Dashboard
-        right.setBottom(sliderPanel);
+        right.setBottom(chartPanel);
         right.setPrefSize(800,800);
-
 
         //We merge leftBar and Dashboard
         borderPane.setLeft(left);
@@ -112,17 +111,25 @@ public class MainScreen extends Application {
         final int qos = 2;
 
         try {
+            // Initialize the MQTT client
             MqttClient mqttClient = new MqttClient(MQTT_BROKER, MQTT_CLIENT_ID, memoryPersistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
+
+            // Set connection/reconnection options
             connOpts.setCleanSession(true);
             connOpts.setAutomaticReconnect(true);
             connOpts.setConnectionTimeout(10);
+
+            // Authentication
             connOpts.setUserName(MQTT_USERNAME);
             connOpts.setPassword(MQTT_PASSWORD.toCharArray());
+
+            // Connect to broker
             System.out.println("Connecting to broker: "+ MQTT_BROKER);
             mqttClient.connect(connOpts);
             System.out.println("Connected");
 
+            // Subscription
             mqttClient.subscribe(MQTT_DATA_GATHERING_TOPIC);
             mqttClient.setCallback(new MqttCallback() {
                 @Override
@@ -140,10 +147,11 @@ public class MainScreen extends Application {
 
                 }
             });
-
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }
-        launch();
+
+        // Launch the JavaFX application
+        launch(args);
     }
 }
