@@ -9,6 +9,8 @@ import javafx.animation.KeyFrame;
 import javafx.util.Duration;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.example.smartplantcare.database.Measurement;
 import org.example.smartplantcare.database.Model;
 
@@ -101,9 +103,47 @@ public class MainScreen extends Application {
     }
 
     public static void main(String[] args) {
+        final String MQTT_DATA_GATHERING_TOPIC = "HiGrowSensor/send_data";
+        final String MQTT_BROKER = "tcp://public.cloud.shiftr.io:1883";
+        final String MQTT_CLIENT_ID = "Smart_Plant_Care_App";
+        final String MQTT_USERNAME = "public";
+        final String MQTT_PASSWORD = "public";
+        MemoryPersistence memoryPersistence = new MemoryPersistence();
+        final int qos = 2;
 
+        try {
+            MqttClient mqttClient = new MqttClient(MQTT_BROKER, MQTT_CLIENT_ID, memoryPersistence);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            connOpts.setAutomaticReconnect(true);
+            connOpts.setConnectionTimeout(10);
+            connOpts.setUserName(MQTT_USERNAME);
+            connOpts.setPassword(MQTT_PASSWORD.toCharArray());
+            System.out.println("Connecting to broker: "+ MQTT_BROKER);
+            mqttClient.connect(connOpts);
+            System.out.println("Connected");
+
+            mqttClient.subscribe(MQTT_DATA_GATHERING_TOPIC);
+            mqttClient.setCallback(new MqttCallback() {
+                @Override
+                public void connectionLost(Throwable throwable) {
+                    System.out.println("Connection lost");
+                }
+
+                @Override
+                public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                    System.out.println(topic + " : " + new String(mqttMessage.getPayload()));
+                }
+
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+                }
+            });
+
+        } catch (MqttException e) {
+            throw new RuntimeException(e);
+        }
         launch();
     }
-
-
 }
