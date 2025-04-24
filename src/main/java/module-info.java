@@ -8,6 +8,9 @@ module org.example.smartplantcare {
     requires eu.hansolo.tilesfx;
     requires java.sql;
     requires org.eclipse.paho.client.mqttv3;
+    requires jdk.jsobject;
+    requires org.json;
+    requires java.desktop;
 
     opens org.example.smartplantcare to javafx.fxml;
     exports org.example.smartplantcare;

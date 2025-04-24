@@ -5,8 +5,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.*;
-import javafx.geometry.Insets;
 
 import java.util.ArrayList;
 import java.util.List;

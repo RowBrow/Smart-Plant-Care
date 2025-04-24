@@ -22,14 +22,12 @@ public class FakeDataGenerator {
     public static void insertFakeData(Connection conn) throws SQLException {
 
         Statement stmt = conn.createStatement();
-        stmt.execute("DELETE FROM plantData");
+        stmt.execute("DELETE FROM measurement");
 
-        String insertSQL = "INSERT OR IGNORE INTO plantData (datetime, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?)";
+        String insertSQL = "INSERT OR IGNORE INTO measurement (datetime, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement pstmt = conn.prepareStatement(insertSQL);
         Random rand = new Random();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd hh:mm:ss a");
-
-
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
         // 1. 2025-04-19 17:00:00 ~ 17:59:59 → 10개
         LocalDateTime baseTime1 = LocalDateTime.of(2025, 4, 19, 17, 0);
@@ -66,7 +64,6 @@ public class FakeDataGenerator {
 
         pstmt.executeUpdate();
         System.out.println("Inserted: " + timestamp.format(formatter));
-
     }
 }
 

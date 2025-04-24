@@ -23,7 +23,7 @@ public class StatusPanel {
         drawText(450,50,17,"Flowering Plant"); // selected plants from list should be shown here
         drawText(450,80,15,"Monstera Deliciosa");
 
-        int x0=50,xd=130, sz1=20, sz2=40;
+        int x0=20,xd=160, sz1=20, sz2=40;
         drawText(x0,200,sz1,"Light");
         drawText(x0,250,sz2,String.valueOf(light)+" %");
         drawText(x0+xd,200,sz1,"Temp");
@@ -38,9 +38,4 @@ public class StatusPanel {
         gc.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD ,sz));
         gc.fillText(s, x,y);
     }
-
-
-
-
-
 }

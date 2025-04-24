@@ -3,39 +3,35 @@ package org.example.smartplantcare;
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.TileBuilder;
 import eu.hansolo.tilesfx.chart.TilesFXSeries;
-import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 
 import java.sql.*;
-import java.util.Arrays;
 
 import static org.example.smartplantcare.HelperMethods.vspace;
 
-public class ChartPanel {
-    public static Button lightChart = HelperMethods.button("Light");
-    public static Button tempChart = HelperMethods.button("Temp");
-    public static Button waterChart = HelperMethods.button("Water");
-    public static Button humidChart = HelperMethods.button("Humid");
+public class ChartPanel extends Pane {
+    public Button lightChart = HelperMethods.button("Light");
+    public Button tempChart = HelperMethods.button("Temp");
+    public Button waterChart = HelperMethods.button("Water");
+    public Button humidChart = HelperMethods.button("Humid");
+
+    public Tile chart;
 
 //    lightChart.setOnAction(e -> {createChartPanel();});  // createChartPanel should be replaced into each chart
 
-    private static final double TILE_WIDTH = 400;
-    private static final double TILE_HEIGHT = 400;
+    private static final double TILE_WIDTH = 700;
+    private static final double TILE_HEIGHT = 280;
 
     private static StackPane chartArea = new StackPane(); //place for chart
 
@@ -43,7 +39,8 @@ public class ChartPanel {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         String DB_URL = "jdbc:sqlite:identifier.sqlite";
 
-        String query = "SELECT datetime, light FROM plantData WHERE datetime LIKE '20250419%' ORDER BY datetime ASC";
+        // Select the last 20 measurements and show their time and light readings.
+        String query = "SELECT datetime, light FROM measurement WHERE datetime ORDER BY datetime ASC LIMIT 20";
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement();
@@ -53,17 +50,16 @@ public class ChartPanel {
                 String datetime = rs.getString("datetime");
                 int light = rs.getInt("light");
 
-/*              // // Extract only the time information (e.g. "05:12 PM")
+/*              // 시간 정보만 추출 (예: "05:12 PM")
                 String timeLabel = datetime.substring(9);  // "hh:mm:ss AM/PM" 추출
                 series.getData().add(new XYChart.Data<>(timeLabel, light));
-                // datetime format: "20250419 05:00:00 PM"
+                // datetime 형식: "20250419 05:00:00 PM"
 */
-                //Extract time string: string after space
-                String[] parts = datetime.split(" ");
-                String timeLabel = (parts.length >= 3) ? parts[1].substring(0, 5) + " " + parts[2] : datetime;
+                //방법1: 시간 문자열 추출 : 공백 이후 문자열
+                String[] parts = datetime.split("T");
+                String timeLabel = (parts.length >= 2) ? parts[1].substring(0,8) : datetime;
 
                 series.getData().add(new XYChart.Data<>(timeLabel, light));
-
             }
 
         } catch (SQLException e) {
@@ -73,19 +69,19 @@ public class ChartPanel {
         return series;
     }
 
-    public static VBox createChartPanel() {
+    public ChartPanel() {
         XYChart.Series<String, Number> series = getLightDataFromDB();
 
         CategoryAxis xAxis = new CategoryAxis();
 
-        // Add only the labels you need to the list
+        // 필요한 라벨만 리스트에 추가
 /*      xAxis.setCategories(FXCollections.observableArrayList(
                 "0:00 AM", "2:00 AM","4:00 AM", "6:00 AM", "8:00 AM",
                 "10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM","8:00 PM", "10:00 PM","12:00 PM"
         ));
         xAxis.setTickLabelFont(Font.font("Arial", 14));
 */
-        Tile areaChartTile = TileBuilder.create()
+        chart = TileBuilder.create()
                 .skinType(Tile.SkinType.SMOOTHED_CHART)
                 .prefSize(TILE_WIDTH, TILE_HEIGHT)
                 .title("Light Intensity per day")
@@ -100,7 +96,7 @@ public class ChartPanel {
                                 new Stop(1, Color.TRANSPARENT))))
                 .build();
 
-        StackPane root = new StackPane(areaChartTile);
-        return new VBox(new HBox(lightChart, tempChart, waterChart, humidChart), vspace(30), root);
+        StackPane root = new StackPane(chart);
+        this.getChildren().addAll(new VBox(new HBox(lightChart, tempChart, waterChart, humidChart), vspace(29), root));
     }
 }

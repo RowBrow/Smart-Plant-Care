@@ -1,18 +1,14 @@
 package org.example.smartplantcare.database;
 
 public class Measurement {
-    private String datetime;
-    private float light;
-    private float temp;
-    private float water;
-    private float humidity;
+    private final String timestamp;
+    private final float light;
+    private final float temp;
+    private final float water;
+    private final float humidity;
 
-    public Measurement() {
-
-    }
-
-    public Measurement(String datetime, float light, float temp, float water, float humidity) {
-        this.datetime = datetime;
+    public Measurement(String timestamp, float light, float temp, float water, float humidity) {
+        this.timestamp = timestamp;
         this.light = light;
         this.temp = temp;
         this.water = water;
@@ -20,7 +16,7 @@ public class Measurement {
     }
 
     public String getDatetime() {
-        return datetime;
+        return timestamp;
     }
 
     public float getLight() {

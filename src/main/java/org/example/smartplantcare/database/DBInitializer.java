@@ -1,6 +1,5 @@
 package org.example.smartplantcare.database;
 
-
 import java.sql.Connection;
 import java.sql.Statement;
 

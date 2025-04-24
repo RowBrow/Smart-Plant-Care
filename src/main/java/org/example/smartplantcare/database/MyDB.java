@@ -1,17 +1,14 @@
 package org.example.smartplantcare.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.sql.*;
 
 public class MyDB {
     Connection conn = null;
 
-    public MyDB(){
-        if(conn==null)open();
+    public MyDB() {
+        if(conn == null) {
+            open();
+        }
     }
     public void open(){
         try {
@@ -19,40 +16,53 @@ public class MyDB {
             conn = DriverManager.getConnection(url);
         } catch (SQLException e) {
             System.out.println("cannot open");
-            if (conn != null) close();
+            if (conn != null) {
+                close();
+            }
         };
     }
     public void close() {
         try {
-            if (conn != null) conn.close();
+            if (conn != null) {
+                conn.close();
+            }
         } catch (SQLException e) {
             System.out.println("cannot close");
         }
         conn = null;
     }
     public void cmd(String sql){
-        if(conn==null)open();
-        if(conn==null){System.out.println("No connection");return;}
-        Statement stmt=null;
+        if(conn == null) {
+            open();
+        }
+        if(conn == null) {
+            System.out.println("No connection");return;
+        }
+        Statement stmt = null;
         try {
             stmt = conn.createStatement();
             stmt.executeUpdate(sql);
-        } catch (SQLException e ) {
+        } catch (SQLException e) {
             System.out.println("Error in statement "+sql);
         }
         try {
-            if (stmt != null) { stmt.close(); }
-        } catch (SQLException e ) {
+            if (stmt != null) {
+                stmt.close();
+            }
+        } catch (SQLException e) {
             System.out.println("Error in statement "+sql);
         }
     }
 
     public Measurement queryOneMeasurement(String query) {
-        Measurement res = new Measurement();
-        if (conn == null) open();
+        Measurement res = null;
+        if (conn == null) {
+            open();
+        }
+
         if (conn == null) {
             System.out.println("No connection");
-            return res;
+            return null;
         }
         Statement stmt = null;
         try {
@@ -82,5 +92,33 @@ public class MyDB {
         return res;
     }
 
+    public void insertMeasurement(String query, String datetime, float light, float temp, float water, float humidity) throws SQLException {
+        if (conn == null) open();
+        if (conn == null) {
+            System.out.println("No connection");
+        }
+        Statement stmt = null;
+        try {
 
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, datetime);
+            pstmt.setFloat(2, light); //INT
+            pstmt.setFloat(3, temp);
+            pstmt.setFloat(4, water); //INT
+            pstmt.setFloat(5, humidity);
+
+            pstmt.executeUpdate();
+
+
+        } catch (SQLException e) {
+            System.out.println("Error in statement: " + query);
+        }
+        try {
+            if (stmt != null) {
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("Error closing statement: " + query );
+        }
+    }
 }

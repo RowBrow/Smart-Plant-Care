@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 
-// connecting SQLite, creating TABLE, and saving/finding userInfo from DB
+// Connecting SQLite, creating TABLE, and saving/finding userInfo from DB
 
 public class DBConnection {
     public static Connection getConnection() {
