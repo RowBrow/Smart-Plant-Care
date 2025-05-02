@@ -18,6 +18,7 @@ public class DBConnection {
         }
     }
 }
+
 /*
 public class DBConnection {
     public static Connection getConnection() throws SQLException {
@@ -28,7 +29,6 @@ public class DBConnection {
     }
 }
 
-
 public class DBConnection {
     private static final String DB_URL = "jdbc:sqlite:users.db";
 
@@ -36,7 +36,6 @@ public class DBConnection {
         return DriverManager.getConnection(DB_URL);
     }
 }
-
 */
 
 

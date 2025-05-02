@@ -12,14 +12,13 @@ public class Model{
   }
 
   public void insertMeasurement(Measurement measurement) throws SQLException {
+    String deviceId = measurement.getDeviceId();
     String datetime = measurement.getDatetime();
-    float light = measurement.getLight();
+    int light = measurement.getLight();
     float temp = measurement.getTemp();
-    float water = measurement.getWater();
+    int water = measurement.getWater();
     float humidity = measurement.getHumidity();
-    String insertSQL = "INSERT OR IGNORE INTO measurement (datetime, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?)";
-    db.insertMeasurement(insertSQL, datetime, light, temp, water, humidity);
+    String insertSQL = "INSERT OR IGNORE INTO measurement (device_id, timestamp, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?, ?)";
+    db.insertMeasurement(insertSQL, deviceId, datetime, light, temp, water, humidity);
   }
-
-
 }

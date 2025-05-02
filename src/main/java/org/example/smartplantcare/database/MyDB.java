@@ -3,122 +3,117 @@ package org.example.smartplantcare.database;
 import java.sql.*;
 
 public class MyDB {
-    Connection conn = null;
+    Connection connection = null;
 
     public MyDB() {
-        if(conn == null) {
-            open();
-        }
+        open();
     }
-    public void open(){
+    public void open() {
         try {
             String url = "jdbc:sqlite:identifier.sqlite";
-            conn = DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(url);
         } catch (SQLException e) {
             System.out.println("cannot open");
-            if (conn != null) {
+            if (connection != null) {
                 close();
             }
         };
     }
     public void close() {
         try {
-            if (conn != null) {
-                conn.close();
+            if (connection != null) {
+                connection.close();
             }
         } catch (SQLException e) {
             System.out.println("cannot close");
         }
-        conn = null;
+        connection = null;
     }
-    public void cmd(String sql){
-        if(conn == null) {
+
+    public void cmd(String command) {
+        if(connection == null) {
             open();
         }
-        if(conn == null) {
-            System.out.println("No connection");return;
+
+        if(connection == null) {
+            System.out.println("No connection");
+            return;
         }
+
         Statement stmt = null;
+
         try {
-            stmt = conn.createStatement();
-            stmt.executeUpdate(sql);
+            stmt = connection.createStatement();
+            stmt.executeUpdate(command);
         } catch (SQLException e) {
-            System.out.println("Error in statement "+sql);
+            System.out.println("Error in statement "+command);
         }
+
         try {
             if (stmt != null) {
                 stmt.close();
             }
         } catch (SQLException e) {
-            System.out.println("Error in statement "+sql);
+            System.out.println("Error in statement "+command);
         }
     }
 
     public Measurement queryOneMeasurement(String query) {
-        Measurement res = null;
-        if (conn == null) {
+        if (connection == null) {
             open();
         }
 
-        if (conn == null) {
+        if (connection == null) {
             System.out.println("No connection");
             return null;
         }
-        Statement stmt = null;
+        Statement statement = null;
         try {
-            stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
 
-            while (rs.next()) {
+            // Get the
+            String deviceId = resultSet.getString("device_id");
+            String timestamp = resultSet.getString("datetime");
+            int light = resultSet.getInt("light");
+            float temp = resultSet.getFloat("temp");
+            int water = resultSet.getInt("water");
+            float humidity = resultSet.getFloat("humidity");
 
-                String datetime = rs.getString("datetime");
-                float light = rs.getFloat("light");
-                float temp = rs.getFloat("temp");
-                float water = rs.getFloat("water");
-                float humidity = rs.getFloat("humidity");
-                //Get the empty measurement from the front and enter the value here
-                res = new Measurement(datetime, light, temp, water, humidity);
-            }
+            return new Measurement(deviceId, timestamp, light, temp, water, humidity);
         } catch (SQLException e) {
             System.out.println("Error in statement: " + query);
         }
         try {
-            if (stmt != null) {
-                stmt.close();
+            if (statement != null) {
+                statement.close();
             }
         } catch (SQLException e) {
             System.out.println("Error closing statement: " + query );
         }
-        return res;
+        return null;
     }
 
-    public void insertMeasurement(String query, String datetime, float light, float temp, float water, float humidity) throws SQLException {
-        if (conn == null) open();
-        if (conn == null) {
-            System.out.println("No connection");
+    public void insertMeasurement(String query, String deviceId, String timestamp, int light, float temp, int water, float humidity) throws SQLException {
+        if (connection == null) {
+            open();
         }
-        Statement stmt = null;
-        try {
 
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, datetime);
-            pstmt.setFloat(2, light); //INT
-            pstmt.setFloat(3, temp);
-            pstmt.setFloat(4, water); //INT
-            pstmt.setFloat(5, humidity);
+        if (connection == null) {
+            throw new SQLException("Connection to the database failed");
+        }
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, deviceId);
+            pstmt.setString(2, timestamp);
+            pstmt.setInt(3, light); //INT
+            pstmt.setFloat(4, temp);
+            pstmt.setInt(5, water); //INT
+            pstmt.setFloat(6, humidity);
 
             pstmt.executeUpdate();
-
-
         } catch (SQLException e) {
             System.out.println("Error in statement: " + query);
-        }
-        try {
-            if (stmt != null) {
-                stmt.close();
-            }
-        } catch (SQLException e) {
-            System.out.println("Error closing statement: " + query );
         }
     }
 }

@@ -55,7 +55,7 @@ public class MainScreen extends Application {
         chartPanel = new ChartPanel();
 
         //Slider
-        sliderPanel = SliderPanel.sliderPanel();
+        sliderPanel = new SliderPanel();
 
         //Dummy button to change values randomly
         Button button1 = new Button("Change");
@@ -153,7 +153,7 @@ public class MainScreen extends Application {
                     LocalDateTime now = LocalDateTime.now();
                     String standardizedNow = now.format(DateTimeFormatter.ISO_DATE_TIME);
 
-                    Measurement measurement = new Measurement(standardizedNow, light, temperature, water, humidity);
+                    Measurement measurement = new Measurement(standardizedNow, deviceId, light, temperature, water, humidity);
 
                     db.insertMeasurement(measurement);
                 }

@@ -20,8 +20,9 @@ public class DBInitializer {
             );
         """;
 
-        try (Connection conn = DBConnection.getConnection();
-             Statement stmt = conn.createStatement()) {
+        try {
+            Connection conn = DBConnection.getConnection();
+            Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (Exception e) {
             e.printStackTrace();

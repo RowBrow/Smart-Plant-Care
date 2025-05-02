@@ -1,13 +1,15 @@
 package org.example.smartplantcare.database;
 
 public class Measurement {
+    private final String deviceId;
     private final String timestamp;
-    private final float light;
+    private final int light;
     private final float temp;
-    private final float water;
+    private final int water;
     private final float humidity;
 
-    public Measurement(String timestamp, float light, float temp, float water, float humidity) {
+    public Measurement(String deviceId, String timestamp, int light, float temp, int water, float humidity) {
+        this.deviceId = deviceId;
         this.timestamp = timestamp;
         this.light = light;
         this.temp = temp;
@@ -19,7 +21,7 @@ public class Measurement {
         return timestamp;
     }
 
-    public float getLight() {
+    public int getLight() {
         return light;
     }
 
@@ -27,7 +29,7 @@ public class Measurement {
         return temp;
     }
 
-    public float getWater() {
+    public int getWater() {
         return water;
     }
 
@@ -35,6 +37,8 @@ public class Measurement {
         return humidity;
     }
 
-    // Optional: add getters, setters, toString(), etc.
+    public String getDeviceId() {
+        return deviceId;
+    }
 }
 
