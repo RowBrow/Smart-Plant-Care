@@ -21,7 +21,7 @@ import org.json.*;
 
 public class MainScreen extends Application {
     public MainScreen() {}
-    static Model db = new Model();
+    static Model model = new Model();
 
     public static Canvas canvas = new Canvas(700,300);
     private static final BorderPane borderPane = new BorderPane();
@@ -92,7 +92,7 @@ public class MainScreen extends Application {
     }
 
     public void updateMeasurement() {
-        Measurement measurement = db.getLatestData();
+        Measurement measurement = model.getLatestData();
         if (measurement != null) {
             statusPanel.drawStatus(
                     measurement.light(),
@@ -169,7 +169,7 @@ public class MainScreen extends Application {
 
             Measurement measurement = new Measurement(standardizedNow, deviceId, light, temperature, water, humidity);
 
-            db.insertMeasurement(measurement);
+            model.insertMeasurement(measurement);
         }
 
         @Override

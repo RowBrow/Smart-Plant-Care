@@ -14,7 +14,6 @@ public class Model {
   }
 
   public void insertMeasurement(Measurement measurement) throws SQLException {
-    String insertSQL = "INSERT OR IGNORE INTO measurement (device_id, timestamp, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?, ?)";
-    db.insertMeasurement(insertSQL, measurement);
+    db.insertMeasurement(measurement);
   }
 }

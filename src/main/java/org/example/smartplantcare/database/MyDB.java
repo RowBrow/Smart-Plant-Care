@@ -96,7 +96,7 @@ public class MyDB {
         return null;
     }
 
-    public void insertMeasurement(String query,  Measurement measurement) throws SQLException {
+    public void insertMeasurement(Measurement measurement) throws SQLException {
         if (connection == null) {
             open();
         }
@@ -104,18 +104,20 @@ public class MyDB {
         if (connection == null) {
             throw new SQLException("Connection to the database failed");
         }
+        String insertionStatement = "INSERT OR IGNORE INTO measurement (device_id, timestamp, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?, ?)";
         try {
-            PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setString(1, measurement.deviceId());
-            pstmt.setString(2, measurement.timestamp());
-            pstmt.setInt(3, measurement.light()); //INT
-            pstmt.setFloat(4, measurement.temp());
-            pstmt.setInt(5, measurement.water()); //INT
-            pstmt.setFloat(6, measurement.humidity());
+            PreparedStatement stmt = connection.prepareStatement(insertionStatement);
+            stmt.setInt(1, 0); // The database should decide the ID
+            stmt.setString(2, measurement.deviceId());
+            stmt.setString(3, measurement.timestamp());
+            stmt.setInt(4, measurement.light()); //INT
+            stmt.setFloat(5, measurement.temp());
+            stmt.setInt(6, measurement.water()); //INT
+            stmt.setFloat(7, measurement.humidity());
 
-            pstmt.executeUpdate();
+            stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error in statement: " + query);
+            System.out.println("Error in statement: " + insertionStatement);
         }
     }
 }
