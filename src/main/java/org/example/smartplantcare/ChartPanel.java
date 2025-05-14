@@ -20,12 +20,19 @@ import java.sql.*;
 import static org.example.smartplantcare.HelperMethods.vspace;
 
 public class ChartPanel extends VBox {
+    private String deviceId;
     public Button lightChart = HelperMethods.button("Light");
     public Button tempChart = HelperMethods.button("Temp");
     public Button waterChart = HelperMethods.button("Water");
     public Button humidChart = HelperMethods.button("Humid");
     private final Series<String, Number> series = new Series<>();
 
+    public enum ChartType {
+        LIGHT,
+        TEMP,
+        WATER,
+        HUMIDITY
+    }
     public Tile chart;
 
 //    lightChart.setOnAction(e -> {createChartPanel();});  // createChartPanel should be replaced into each chart
@@ -33,12 +40,37 @@ public class ChartPanel extends VBox {
     private static final double TILE_WIDTH = 700;
     private static final double TILE_HEIGHT = 280;
 
+
+    // TODO: Create the function
+    //  that draws the graph depending
+    //  on the type of chart wanted by
+    //  the user (light/temperature/etc.)
+    /*
+    public void drawChart(ChartType chartType) {
+        series.getData().clear();
+        switch (chartType) {
+            case LIGHT -> {
+
+            }
+            case TEMP -> {
+
+            }
+            case WATER -> {
+
+            }
+            case HUMIDITY -> {
+
+            }
+        }
+    }
+    */
+
     public void getLightDataFromDB() {
         series.getData().clear();
         String DB_URL = "jdbc:sqlite:identifier.sqlite";
 
         // Select the last 20 measurements and show their time and light readings.
-        String query = "SELECT timestamp, light FROM measurement ORDER BY timestamp LIMIT 20";
+        String query = "SELECT * FROM measurement ORDER BY timestamp LIMIT 20";
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement();
@@ -63,6 +95,10 @@ public class ChartPanel extends VBox {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public ChartPanel(String deviceId) {
+        this.deviceId = null;
     }
 
     public ChartPanel() {

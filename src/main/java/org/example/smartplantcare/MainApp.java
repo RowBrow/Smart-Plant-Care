@@ -91,8 +91,8 @@ public class MainApp extends Application {
     }
 
     public void updateMeasurement() {
-        // Measurement measurement = model.getLatestData();
-        Measurement measurement = new Measurement("0", "0", 10, 600, 500, 600);
+        Measurement measurement = model.getLatestMeasurement();
+        measurement = new Measurement("0", "0", 10, 600, 500, 600);
         if (measurement != null) {
             statusPanel.drawStatus(
                     measurement.light(),

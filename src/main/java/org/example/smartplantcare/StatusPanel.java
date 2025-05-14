@@ -25,7 +25,7 @@ public class StatusPanel extends VBox {
 
     public StatusPanel() {
         // Set fonts and sizes for welcome text
-        int WELCOME_TEXT_FONT_SIZE = 20;
+        int WELCOME_TEXT_FONT_SIZE = 40;
         welcomeText.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, WELCOME_TEXT_FONT_SIZE));
         plantName.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, WELCOME_TEXT_FONT_SIZE));
 
@@ -36,14 +36,14 @@ public class StatusPanel extends VBox {
         Label humidityLabel = new Label("Humidity");
 
         // Set fonts and sizes for measurement labels
-        int STATUS_LABEL_FONT_SIZE = 30;
+        int STATUS_LABEL_FONT_SIZE = 20;
         lightLabel.setFont(Font.font(String.valueOf(Font.getDefault()), FontWeight.BOLD, STATUS_LABEL_FONT_SIZE));
         temperatureLabel.setFont(Font.font(String.valueOf(Font.getDefault()), FontWeight.BOLD, STATUS_LABEL_FONT_SIZE));
         waterLabel.setFont(Font.font(String.valueOf(Font.getDefault()), FontWeight.BOLD, STATUS_LABEL_FONT_SIZE));
         humidityLabel.setFont(Font.font(String.valueOf(Font.getDefault()), FontWeight.BOLD, STATUS_LABEL_FONT_SIZE));
 
         // Set fonts and sizes for measurement texts
-        int STATUS_MEASUREMENT_FONT_SIZE = 20;
+        int STATUS_MEASUREMENT_FONT_SIZE = 30;
         lightMeasurement.setFont(Font.font(String.valueOf(Font.getDefault()), FontWeight.BOLD, STATUS_MEASUREMENT_FONT_SIZE));
         temperatureMeasurement.setFont(Font.font(String.valueOf(Font.getDefault()), FontWeight.BOLD, STATUS_MEASUREMENT_FONT_SIZE));
         waterMeasurement.setFont(Font.font(String.valueOf(Font.getDefault()), FontWeight.BOLD, STATUS_MEASUREMENT_FONT_SIZE));
@@ -67,8 +67,10 @@ public class StatusPanel extends VBox {
                 new VBox(waterLabel, waterMeasurement), filler3,
                 new VBox(humidityLabel, humidityMeasurement));
 
+
         // Add both panes to StatusPanel
         this.getChildren().addAll(welcomePane, measurementPane);
+        this.setSpacing(20);
     }
 
     public void drawStatus(float light, float temperature, float water, float humidity) {

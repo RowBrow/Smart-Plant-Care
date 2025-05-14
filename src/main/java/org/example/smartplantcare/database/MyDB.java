@@ -3,6 +3,8 @@ package org.example.smartplantcare.database;
 import org.example.smartplantcare.model.Measurement;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyDB {
     Connection connection = null;
@@ -32,7 +34,7 @@ public class MyDB {
         connection = null;
     }
 
-    public void cmd(String command) {
+    public void command(String command) {
         if(connection == null) {
             open();
         }
@@ -58,6 +60,35 @@ public class MyDB {
         } catch (SQLException e) {
             System.out.println("Error in statement "+command);
         }
+    }
+
+    public List<Measurement> getMeasurements(String query) {
+        List<Measurement> measurements = new ArrayList<>();
+        if (connection == null) {
+            open();
+        }
+
+        Statement statement;
+        ResultSet resultSet;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                String deviceId = resultSet.getString("device_id");
+                String timestamp = resultSet.getString("datetime");
+                int light = resultSet.getInt("light");
+                float temp = resultSet.getFloat("temp");
+                int water = resultSet.getInt("water");
+                float humidity = resultSet.getFloat("humidity");
+
+                measurements.add(new Measurement(deviceId, timestamp, light, temp, water, humidity));
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Error in statement "+query);
+        }
+
+        return measurements;
     }
 
     public Measurement queryOneMeasurement(String query) {
@@ -104,7 +135,7 @@ public class MyDB {
         if (connection == null) {
             throw new SQLException("Connection to the database failed");
         }
-        String insertionStatement = "INSERT OR IGNORE INTO measurement (device_id, timestamp, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertionStatement = "INSERT OR IGNORE INTO measurement (id, device_id, timestamp, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = connection.prepareStatement(insertionStatement);
             stmt.setInt(1, 0); // The database should decide the ID
