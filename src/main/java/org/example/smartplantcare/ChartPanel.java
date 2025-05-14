@@ -21,10 +21,10 @@ import static org.example.smartplantcare.HelperMethods.vspace;
 
 public class ChartPanel extends VBox {
     private String deviceId;
-    public Button lightChart = HelperMethods.button("Light");
-    public Button tempChart = HelperMethods.button("Temp");
-    public Button waterChart = HelperMethods.button("Water");
-    public Button humidChart = HelperMethods.button("Humid");
+    public Button lightChartButton = HelperMethods.button("Light");
+    public Button tempChartButton = HelperMethods.button("Temp");
+    public Button waterChartButton = HelperMethods.button("Water");
+    public Button humidChartButton = HelperMethods.button("Humid");
     private final Series<String, Number> series = new Series<>();
 
     public enum ChartType {
@@ -127,9 +127,13 @@ public class ChartPanel extends VBox {
                                 new Stop(0, Tile.LIGHT_GREEN),
                                 new Stop(1, Color.TRANSPARENT))))
                 .build();
-        StackPane root = new StackPane(chart);
+
+        // Create the button section and align it properly
+        HBox buttons = new HBox(lightChartButton, tempChartButton, waterChartButton, humidChartButton);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setSpacing(20);
 
         this.setAlignment(Pos.CENTER);
-        this.getChildren().addAll(new HBox(lightChart, tempChart, waterChart, humidChart), vspace(29), root);
+        this.getChildren().addAll(buttons, vspace(29), chart);
     }
 }
