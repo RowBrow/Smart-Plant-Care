@@ -15,6 +15,7 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.chart.XYChart.Series;
 
 import java.sql.*;
 
@@ -25,6 +26,7 @@ public class ChartPanel extends Pane {
     public Button tempChart = HelperMethods.button("Temp");
     public Button waterChart = HelperMethods.button("Water");
     public Button humidChart = HelperMethods.button("Humid");
+    private final Series<String, Number> series = new Series<>();
 
     public Tile chart;
 
@@ -33,14 +35,12 @@ public class ChartPanel extends Pane {
     private static final double TILE_WIDTH = 700;
     private static final double TILE_HEIGHT = 280;
 
-    private static StackPane chartArea = new StackPane(); //place for chart
-
-    public static XYChart.Series<String, Number> getLightDataFromDB() {
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
+    public void getLightDataFromDB() {
+        series.getData().clear();
         String DB_URL = "jdbc:sqlite:identifier.sqlite";
 
         // Select the last 20 measurements and show their time and light readings.
-        String query = "SELECT datetime, light FROM measurement WHERE datetime ORDER BY datetime ASC LIMIT 20";
+        String query = "SELECT timestamp, light FROM measurement ORDER BY timestamp LIMIT 20";
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement();
@@ -65,12 +65,10 @@ public class ChartPanel extends Pane {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return series;
     }
 
     public ChartPanel() {
-        XYChart.Series<String, Number> series = getLightDataFromDB();
+        getLightDataFromDB();
 
         CategoryAxis xAxis = new CategoryAxis();
 
@@ -84,7 +82,7 @@ public class ChartPanel extends Pane {
         chart = TileBuilder.create()
                 .skinType(Tile.SkinType.SMOOTHED_CHART)
                 .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("Light Intensity per day")
+                .title("Light Intensity Per Day")
                 .titleAlignment(TextAlignment.CENTER)
                 .chartType(Tile.ChartType.AREA)
                 .smoothing(true)
@@ -95,7 +93,6 @@ public class ChartPanel extends Pane {
                                 new Stop(0, Tile.LIGHT_GREEN),
                                 new Stop(1, Color.TRANSPARENT))))
                 .build();
-
         StackPane root = new StackPane(chart);
         this.getChildren().addAll(new VBox(new HBox(lightChart, tempChart, waterChart, humidChart), vspace(29), root));
     }

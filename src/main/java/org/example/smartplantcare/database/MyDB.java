@@ -1,5 +1,7 @@
 package org.example.smartplantcare.database;
 
+import org.example.smartplantcare.model.Measurement;
+
 import java.sql.*;
 
 public class MyDB {
@@ -94,7 +96,7 @@ public class MyDB {
         return null;
     }
 
-    public void insertMeasurement(String query, String deviceId, String timestamp, int light, float temp, int water, float humidity) throws SQLException {
+    public void insertMeasurement(String query,  Measurement measurement) throws SQLException {
         if (connection == null) {
             open();
         }
@@ -104,12 +106,12 @@ public class MyDB {
         }
         try {
             PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setString(1, deviceId);
-            pstmt.setString(2, timestamp);
-            pstmt.setInt(3, light); //INT
-            pstmt.setFloat(4, temp);
-            pstmt.setInt(5, water); //INT
-            pstmt.setFloat(6, humidity);
+            pstmt.setString(1, measurement.deviceId());
+            pstmt.setString(2, measurement.timestamp());
+            pstmt.setInt(3, measurement.light()); //INT
+            pstmt.setFloat(4, measurement.temp());
+            pstmt.setInt(5, measurement.water()); //INT
+            pstmt.setFloat(6, measurement.humidity());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {

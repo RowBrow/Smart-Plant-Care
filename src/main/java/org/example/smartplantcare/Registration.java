@@ -86,7 +86,7 @@ public class Registration extends Application {
         Text locationLabel = new Text("location");
 
         //Choice box for location
-        ChoiceBox locationchoiceBox = new ChoiceBox();
+        ChoiceBox<String> locationchoiceBox = new ChoiceBox<>();
         locationchoiceBox.getItems().addAll
                 ("Hyderabad", "Chennai", "Delhi", "Mumbai", "Vishakhapatnam");
 
@@ -149,11 +149,12 @@ public class Registration extends Application {
             if (dotnetCheckBox.isSelected()) techList.add("DotNet");
             String technologies = String.join(",", techList);
             String education = educationListView.getSelectionModel().getSelectedItem();
-            String location = locationchoiceBox.getValue().toString();
+            String location = locationchoiceBox.getValue();
 
             // 예시: DB에 저장
             try (Connection conn = DBConnection.getConnection()) {
                 String sql = "INSERT INTO users (name, dob, gender, reservation, technologies, education, location) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                assert conn != null;
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setString(1, name);
                 stmt.setDate(2, Date.valueOf(dob));

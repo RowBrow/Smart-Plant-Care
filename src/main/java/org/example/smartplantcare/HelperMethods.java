@@ -12,7 +12,7 @@ import java.util.List;
 public class HelperMethods {
     public static String style1="-fx-font-family:sans-serif; -fx-font-weight:bold; -fx-font-size: 15px;" ;
 
-    public static Button button(String s){
+    public static Button button(String s) {
         Button b = new Button(s);
         if(s.equals("DashBoard")){
             b.setOnAction(e -> MainScreen.switchScene(MainScreen.getChartPanel()));

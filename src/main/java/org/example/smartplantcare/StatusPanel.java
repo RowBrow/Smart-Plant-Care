@@ -11,14 +11,14 @@ public class StatusPanel {
     private final Canvas canvas;
 
     public StatusPanel(Canvas canvas){
-        this.canvas=canvas;
+        this.canvas = canvas;
     }
 
     public void drawStatus(float light, float temperature, float water, float humidity){
         GraphicsContext gc=canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        drawText(50,50,25,"Welcome, "); // add user name
+        drawText(50,50,25,"Welcome, "); // add username
         drawText(450,50,17,"Flowering Plant"); // selected plants from list should be shown here
         drawText(450,80,15,"Monstera Deliciosa");
 
@@ -26,7 +26,7 @@ public class StatusPanel {
         drawText(x0,200,sz1,"Light");
         drawText(x0,250,sz2,String.valueOf(light)+" %");
         drawText(x0+xd,200,sz1,"Temp");
-        drawText(x0+xd,250,sz2,String.valueOf(temperature) +" \u00B0C");
+        drawText(x0+xd,250,sz2,String.valueOf(temperature) +" °C");
         drawText(x0+2*xd,200,sz1,"Water");
         drawText(x0+2*xd,250,sz2,String.valueOf(water) + " %");
         drawText(x0+3*xd,200,sz1,"Humidity");

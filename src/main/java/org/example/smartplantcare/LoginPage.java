@@ -96,6 +96,4 @@ public class LoginPage extends Application {
     }
 }
 
-
-
 // from https://www.tutorialspoint.com/javafx/javafx_ui_controls.htm

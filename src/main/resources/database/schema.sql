@@ -2,9 +2,9 @@ drop table if exists measurement;
 
 create table measurement
 (
+    id INTEGER PRIMARY KEY,
     device_id INTEGER,
-    datetime timestamp
-        primary key,
+    timestamp TIMESTAMP,
     light    FLOAT,
     temp     FLOAT,
     water    FLOAT,

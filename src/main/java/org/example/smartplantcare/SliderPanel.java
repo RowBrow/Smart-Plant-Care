@@ -27,7 +27,7 @@ public class SliderPanel extends VBox {
     public Label valueWater = new Label(" ");
 
     public TextField numWater = new TextField();
-    public ComboBox<String> combo = new ComboBox();
+    public ComboBox<String> combo = new ComboBox<>();
     public List<String> list = List.of("a month","a week", "a day");
 
     SliderPanel() {
