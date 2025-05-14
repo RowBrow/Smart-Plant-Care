@@ -55,16 +55,20 @@ public class MainApp extends Application {
         //Slider
         sliderPanel = new SliderPanel();
 
+        // We start with Dashboard
         right.getChildren().add(statusPanel);
-        //We start with Dashboard
         right.getChildren().add(chartPanel);
+        right.setAlignment(Pos.CENTER);
+
+        VBox.setVgrow(right, Priority.ALWAYS);
+        HBox.setHgrow(right, Priority.ALWAYS);
+
         right.setPadding(new Insets(20));
-        right.setPrefSize(800,800);
 
         //We merge leftBar and Dashboard
         mainPane.getChildren().addAll(left, right);
 
-        Scene scene = new Scene(mainPane,1000,800);
+        Scene scene = new Scene(mainPane);
         scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
         stage.setTitle("Smart Plant Care");
         stage.setScene(scene);

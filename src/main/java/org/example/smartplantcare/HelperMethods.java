@@ -14,31 +14,32 @@ public class HelperMethods {
 
     public static Button button(String s) {
         Button b = new Button(s);
-        if(s.equals("DashBoard")){
-            b.setOnAction(e -> MainApp.switchScene(MainApp.getChartPanel()));
-        } else if (s.equals("Advanced Mode")) {
-            b.setOnAction(e -> MainApp.switchScene(MainApp.getSliderPanel()));
-        }
         b.setPrefSize(150,30);
         b.setWrapText(true);
         b.setStyle(BUTTON_STYLE);
         return b;
     }
-    public static List<Button> buttons(String ... strs){
+
+    public static List<Button> buttons(String ... strs) {
         List<Button> buttons = new ArrayList<>();
         for(String s:strs) buttons.add(button(s));
         return buttons;
     }
 
     public static Label label(String s){
-        Label l = new Label(s); l.setPrefSize(150,60); l.setStyle(BUTTON_STYLE); return l;
+        Label l = new Label(s); l.setPrefSize(150,60); l.setStyle(BUTTON_STYLE);
+        return l;
     }
     public static HBox hspace(int i) {
-        HBox hbox = new HBox(); hbox.setPrefSize(i,2); return hbox;
+        HBox hbox = new HBox();
+        hbox.setPrefSize(i,2);
+        return hbox;
     }
 
     public static VBox vspace(int i) {
-        VBox vbox = new VBox(); vbox.setPrefSize(2,i); return vbox;
+        VBox vbox = new VBox();
+        vbox.setPrefSize(2,i);
+        return vbox;
     }
 
     public static Slider slider() {

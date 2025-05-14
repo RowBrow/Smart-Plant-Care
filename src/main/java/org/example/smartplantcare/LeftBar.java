@@ -2,6 +2,8 @@ package org.example.smartplantcare;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 
@@ -15,16 +17,23 @@ public class LeftBar extends VBox {
 
     public LeftBar() {
         List<Button> navButton = HelperMethods.buttons("DashBoard", "AutoMode", "Advanced Mode", "Plant list", "Settings", "FeedBack");
+        navButton.get(0).setOnMouseClicked(e -> {
+            MainApp.switchScene(MainApp.getChartPanel());
+        });
+
+        navButton.get(2).setOnMouseClicked(e -> {
+            MainApp.switchScene(MainApp.getSliderPanel());
+        });
         ImageView logoImageView = new ImageView(logo);
         logoImageView.setFitWidth(150);  // Resize width
         logoImageView.setPreserveRatio(true);
 
-        this.setPrefSize(200, 500);
+        Region filler = new Region();
+        VBox.setVgrow(filler, Priority.ALWAYS);
         this.getChildren().addAll(
-                vspace(50),
                 logoImageView,
                 navButton.get(0), navButton.get(1),
-                navButton.get(2), navButton.get(3), vspace(300),
+                navButton.get(2), navButton.get(3), filler,
                 navButton.get(4), navButton.get(5));
     }
 }

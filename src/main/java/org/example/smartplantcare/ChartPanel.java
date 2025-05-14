@@ -3,13 +3,11 @@ package org.example.smartplantcare;
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.TileBuilder;
 import eu.hansolo.tilesfx.chart.TilesFXSeries;
+import javafx.geometry.Pos;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -21,7 +19,7 @@ import java.sql.*;
 
 import static org.example.smartplantcare.HelperMethods.vspace;
 
-public class ChartPanel extends Pane {
+public class ChartPanel extends VBox {
     public Button lightChart = HelperMethods.button("Light");
     public Button tempChart = HelperMethods.button("Temp");
     public Button waterChart = HelperMethods.button("Water");
@@ -94,6 +92,8 @@ public class ChartPanel extends Pane {
                                 new Stop(1, Color.TRANSPARENT))))
                 .build();
         StackPane root = new StackPane(chart);
-        this.getChildren().addAll(new VBox(new HBox(lightChart, tempChart, waterChart, humidChart), vspace(29), root));
+
+        this.setAlignment(Pos.CENTER);
+        this.getChildren().addAll(new HBox(lightChart, tempChart, waterChart, humidChart), vspace(29), root);
     }
 }
