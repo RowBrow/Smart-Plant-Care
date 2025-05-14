@@ -153,7 +153,12 @@ public class Registration extends Application {
 
             // 예시: DB에 저장
             try (Connection conn = DBConnection.getConnection()) {
-                String sql = "INSERT INTO users (name, dob, gender, reservation, technologies, education, location) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                String sql = """
+                INSERT INTO users 
+                (name, dob, gender, reservation, technologies, education, location) 
+                VALUES 
+                (?, ?, ?, ?, ?, ?, ?)
+                """;
                 assert conn != null;
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setString(1, name);

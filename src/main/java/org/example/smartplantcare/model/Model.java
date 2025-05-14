@@ -9,8 +9,10 @@ public class Model {
   // getting latest value
   public Measurement getLatestMeasurement() {
     return db.queryOneMeasurement(
-            "SELECT * FROM measurement\n" +
-            "ORDER BY datetime DESC LIMIT 1;");
+            """
+            SELECT * FROM measurement
+            ORDER BY datetime DESC LIMIT 1
+            """);
   }
 
   public void insertMeasurement(Measurement measurement) throws SQLException {

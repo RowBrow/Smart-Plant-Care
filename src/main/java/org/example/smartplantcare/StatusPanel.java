@@ -12,11 +12,11 @@ import javafx.scene.text.Text;
 
 
 public class StatusPanel extends VBox {
-    private HBox welcomePane = new HBox();
+    private HBox welcomePane;
     private HBox measurementPane;
 
     private final Text welcomeText = new Text("Welcome");
-    private Text plantName = new Text("Plant Name");
+    private Text plantName = new Text("Monstera Deliciosa");
 
     private final Text lightMeasurement = new Text("-");
     private final Text temperatureMeasurement = new Text("-");
@@ -50,7 +50,6 @@ public class StatusPanel extends VBox {
         humidityMeasurement.setFont(Font.font(String.valueOf(Font.getDefault()), FontWeight.BOLD, STATUS_MEASUREMENT_FONT_SIZE));
 
         // Give padding and proper alignment to welcomePane
-        this.setPadding(new Insets(20));
         Region region = new Region();
         HBox.setHgrow(region, Priority.ALWAYS);
         welcomePane = new HBox(welcomeText, region, plantName);
@@ -67,10 +66,10 @@ public class StatusPanel extends VBox {
                 new VBox(waterLabel, waterMeasurement), filler3,
                 new VBox(humidityLabel, humidityMeasurement));
 
-
         // Add both panes to StatusPanel
         this.getChildren().addAll(welcomePane, measurementPane);
         this.setSpacing(20);
+        this.setPadding(new Insets(20));
     }
 
     public void drawStatus(float light, float temperature, float water, float humidity) {

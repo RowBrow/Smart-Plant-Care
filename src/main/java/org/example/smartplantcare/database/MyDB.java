@@ -135,7 +135,14 @@ public class MyDB {
         if (connection == null) {
             throw new SQLException("Connection to the database failed");
         }
-        String insertionStatement = "INSERT OR IGNORE INTO measurement (id, device_id, timestamp, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        String insertionStatement = """
+        INSERT OR IGNORE INTO measurement 
+        (id, device_id, timestamp, light, temp, water, humidity) 
+        VALUES 
+        (?, ?, ?, ?, ?, ?, ?)
+        """;
+
         try {
             PreparedStatement stmt = connection.prepareStatement(insertionStatement);
             stmt.setInt(1, 0); // The database should decide the ID
