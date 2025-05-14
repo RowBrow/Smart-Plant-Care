@@ -10,7 +10,6 @@ import java.util.List;
 import static org.example.smartplantcare.HelperMethods.vspace;
 
 public class LeftBar extends VBox {
-
     static Image logo = new Image(LeftBar.class.getResource("/images/logo.png").toExternalForm());
     public static String style="-fx-font-family:poppins-italic-text; -fx-font-weight:bold; -fx-font-size: 12px;" ;
 

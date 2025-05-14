@@ -1,9 +1,9 @@
 package org.example.smartplantcare;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
@@ -19,15 +19,14 @@ import java.time.format.DateTimeFormatter;
 
 import org.json.*;
 
-public class MainScreen extends Application {
-    public MainScreen() {}
+public class MainApp extends Application {
+    public MainApp() {}
     static Model model = new Model();
 
-    public static Canvas canvas = new Canvas(700,300);
-    private static final BorderPane borderPane = new BorderPane();
+    private static final HBox mainPane = new HBox();
     private static VBox sliderPanel;
     private static Pane chartPanel;
-    private static final BorderPane right = new BorderPane();
+    private static final VBox right = new VBox();
     private StatusPanel statusPanel;
 
     @Override
@@ -45,7 +44,7 @@ public class MainScreen extends Application {
         VBox left = new LeftBar();
 
         // Status Panel
-        statusPanel = new StatusPanel(canvas);
+        statusPanel = new StatusPanel();
         updateMeasurement();
 
         // We merge the status panel and the slider panel
@@ -56,20 +55,16 @@ public class MainScreen extends Application {
         //Slider
         sliderPanel = new SliderPanel();
 
-        //Dummy button to change values randomly
-        Button button1 = new Button("Change");
-        button1.setOnAction(e -> {updateMeasurement();});
-        right.setTop(button1);
-        right.setCenter(canvas);
+        right.getChildren().add(statusPanel);
         //We start with Dashboard
-        right.setBottom(chartPanel);
+        right.getChildren().add(chartPanel);
+        right.setPadding(new Insets(20));
         right.setPrefSize(800,800);
 
         //We merge leftBar and Dashboard
-        borderPane.setLeft(left);
-        borderPane.setCenter(right);
+        mainPane.getChildren().addAll(left, right);
 
-        Scene scene = new Scene(borderPane,1000,800);
+        Scene scene = new Scene(mainPane,1000,800);
         scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
         stage.setTitle("Smart Plant Care");
         stage.setScene(scene);
@@ -77,7 +72,7 @@ public class MainScreen extends Application {
     }
 
     public static void switchScene(Pane pane) {
-        right.setBottom(pane);
+        right.getChildren().set(1, pane);
         right.setPrefSize(800,700);
     }
 
@@ -92,7 +87,8 @@ public class MainScreen extends Application {
     }
 
     public void updateMeasurement() {
-        Measurement measurement = model.getLatestData();
+        // Measurement measurement = model.getLatestData();
+        Measurement measurement = new Measurement("0", "0", 10, 600, 500, 600);
         if (measurement != null) {
             statusPanel.drawStatus(
                     measurement.light(),
@@ -104,41 +100,8 @@ public class MainScreen extends Application {
     }
 
     public static void main(String[] args) {
-        final String MQTT_DATA_GATHERING_TOPIC = "HiGrowSensor/send_data";
-        final String MQTT_ACTION_SENDING_TOPIC = "HiGrowSensor/send_action";
-        final String MQTT_BROKER = "tcp://public.cloud.shiftr.io:1883";
-        final String MQTT_CLIENT_ID = "Smart_Plant_Care_App";
-        final String MQTT_USERNAME = "public";
-        final String MQTT_PASSWORD = "public";
-        MemoryPersistence memoryPersistence = new MemoryPersistence();
-
-        try {
-            // Initialize the MQTT client
-            MqttClient mqttClient = new MqttClient(MQTT_BROKER, MQTT_CLIENT_ID, memoryPersistence);
-            MqttConnectOptions connOpts = new MqttConnectOptions();
-
-            // Set connection/reconnection options
-            connOpts.setCleanSession(true);
-            connOpts.setAutomaticReconnect(true);
-            connOpts.setConnectionTimeout(10);
-
-            // Authenticate MQTT connection
-            connOpts.setUserName(MQTT_USERNAME);
-            connOpts.setPassword(MQTT_PASSWORD.toCharArray());
-
-            // Connect to broker
-            System.out.println("Connecting to broker: "+ MQTT_BROKER);
-            mqttClient.connect(connOpts);
-            System.out.println("Connected");
-
-            // Subscribe to data gathering topic
-            mqttClient.subscribe(MQTT_DATA_GATHERING_TOPIC);
-
-            // Set callback class for processing gathered data
-            mqttClient.setCallback(new MQTTDataGatheringCallback());
-        } catch (MqttException e) {
-            throw new RuntimeException(e);
-        }
+        // Initialize the MQTT client
+        initializeMQTTClient();
 
         // Launch the JavaFX application
         launch(args);
@@ -175,6 +138,44 @@ public class MainScreen extends Application {
         @Override
         public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
 
+        }
+    }
+
+    private static void initializeMQTTClient() {
+        final String MQTT_DATA_GATHERING_TOPIC = "HiGrowSensor/send_data";
+        final String MQTT_ACTION_SENDING_TOPIC = "HiGrowSensor/send_action";
+        final String MQTT_BROKER = "tcp://public.cloud.shiftr.io:1883";
+        final String MQTT_CLIENT_ID = "Smart_Plant_Care_App";
+        final String MQTT_USERNAME = "public";
+        final String MQTT_PASSWORD = "public";
+        MemoryPersistence memoryPersistence = new MemoryPersistence();
+
+        try {
+            // Initialize the MQTT client
+            MqttClient mqttClient = new MqttClient(MQTT_BROKER, MQTT_CLIENT_ID, memoryPersistence);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+
+            // Set connection/reconnection options
+            connOpts.setCleanSession(true);
+            connOpts.setAutomaticReconnect(true);
+            connOpts.setConnectionTimeout(10);
+
+            // Authenticate MQTT connection
+            connOpts.setUserName(MQTT_USERNAME);
+            connOpts.setPassword(MQTT_PASSWORD.toCharArray());
+
+            // Connect to broker
+            System.out.println("Connecting to broker: "+ MQTT_BROKER);
+            mqttClient.connect(connOpts);
+            System.out.println("Connected");
+
+            // Subscribe to data gathering topic
+            mqttClient.subscribe(MQTT_DATA_GATHERING_TOPIC);
+
+            // Set callback class for processing gathered data
+            mqttClient.setCallback(new MQTTDataGatheringCallback());
+        } catch (MqttException e) {
+            throw new RuntimeException(e);
         }
     }
 }
