@@ -3,29 +3,36 @@ package org.example.smartplantcare;
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.TileBuilder;
 import eu.hansolo.tilesfx.chart.TilesFXSeries;
+import javafx.geometry.Pos;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.chart.XYChart.Series;
 
 import java.sql.*;
 
 import static org.example.smartplantcare.HelperMethods.vspace;
 
-public class ChartPanel extends Pane {
-    public Button lightChart = HelperMethods.button("Light");
-    public Button tempChart = HelperMethods.button("Temp");
-    public Button waterChart = HelperMethods.button("Water");
-    public Button humidChart = HelperMethods.button("Humid");
+public class ChartPanel extends VBox {
+    private String deviceId;
+    public Button lightChartButton = HelperMethods.button("Light");
+    public Button tempChartButton = HelperMethods.button("Temp");
+    public Button waterChartButton = HelperMethods.button("Water");
+    public Button humidChartButton = HelperMethods.button("Humid");
+    private final Series<String, Number> series = new Series<>();
 
+    public enum ChartType {
+        LIGHT,
+        TEMP,
+        WATER,
+        HUMIDITY
+    }
     public Tile chart;
 
 //    lightChart.setOnAction(e -> {createChartPanel();});  // createChartPanel should be replaced into each chart
@@ -33,14 +40,37 @@ public class ChartPanel extends Pane {
     private static final double TILE_WIDTH = 700;
     private static final double TILE_HEIGHT = 280;
 
-    private static StackPane chartArea = new StackPane(); //place for chart
 
-    public static XYChart.Series<String, Number> getLightDataFromDB() {
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
+    // TODO: Create the function
+    //  that draws the graph depending
+    //  on the type of chart wanted by
+    //  the user (light/temperature/etc.)
+    /*
+    public void drawChart(ChartType chartType) {
+        series.getData().clear();
+        switch (chartType) {
+            case LIGHT -> {
+
+            }
+            case TEMP -> {
+
+            }
+            case WATER -> {
+
+            }
+            case HUMIDITY -> {
+
+            }
+        }
+    }
+    */
+
+    public void getLightDataFromDB() {
+        series.getData().clear();
         String DB_URL = "jdbc:sqlite:identifier.sqlite";
 
         // Select the last 20 measurements and show their time and light readings.
-        String query = "SELECT datetime, light FROM measurement WHERE datetime ORDER BY datetime ASC LIMIT 20";
+        String query = "SELECT * FROM measurement ORDER BY timestamp LIMIT 20";
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement();
@@ -65,12 +95,14 @@ public class ChartPanel extends Pane {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
-        return series;
+    public ChartPanel(String deviceId) {
+        this.deviceId = null;
     }
 
     public ChartPanel() {
-        XYChart.Series<String, Number> series = getLightDataFromDB();
+        getLightDataFromDB();
 
         CategoryAxis xAxis = new CategoryAxis();
 
@@ -84,7 +116,7 @@ public class ChartPanel extends Pane {
         chart = TileBuilder.create()
                 .skinType(Tile.SkinType.SMOOTHED_CHART)
                 .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("Light Intensity per day")
+                .title("Light Intensity Per Day")
                 .titleAlignment(TextAlignment.CENTER)
                 .chartType(Tile.ChartType.AREA)
                 .smoothing(true)
@@ -96,7 +128,12 @@ public class ChartPanel extends Pane {
                                 new Stop(1, Color.TRANSPARENT))))
                 .build();
 
-        StackPane root = new StackPane(chart);
-        this.getChildren().addAll(new VBox(new HBox(lightChart, tempChart, waterChart, humidChart), vspace(29), root));
+        // Create the button section and align it properly
+        HBox buttons = new HBox(lightChartButton, tempChartButton, waterChartButton, humidChartButton);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setSpacing(20);
+
+        this.setAlignment(Pos.CENTER);
+        this.getChildren().addAll(buttons, vspace(29), chart);
     }
 }

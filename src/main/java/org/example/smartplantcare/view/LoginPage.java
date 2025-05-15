@@ -1,10 +1,8 @@
-package org.example.smartplantcare;
+package org.example.smartplantcare.view;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -12,11 +10,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 public class LoginPage extends Application {
     @Override
@@ -102,7 +95,5 @@ public class LoginPage extends Application {
         launch(args);
     }
 }
-
-
 
 // from https://www.tutorialspoint.com/javafx/javafx_ui_controls.htm

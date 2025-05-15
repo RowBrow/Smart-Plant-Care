@@ -24,7 +24,12 @@ public class FakeDataGenerator {
         Statement stmt = conn.createStatement();
         stmt.execute("DELETE FROM measurement");
 
-        String insertSQL = "INSERT OR IGNORE INTO measurement (datetime, light, temp, water, humidity) VALUES (?, ?, ?, ?, ?)";
+        String insertSQL = """
+                INSERT OR IGNORE INTO measurement 
+                (timestamp, light, temp, water, humidity) 
+                VALUES 
+                (?, ?, ?, ?, ?)
+                """;
         PreparedStatement pstmt = conn.prepareStatement(insertSQL);
         Random rand = new Random();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;

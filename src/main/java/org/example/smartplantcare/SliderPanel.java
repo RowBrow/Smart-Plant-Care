@@ -14,23 +14,23 @@ import static org.example.smartplantcare.HelperMethods.*;
 import java.awt.*;
 import java.util.List;
 
-public class SliderPanel {
-    public static Slider sliderLight = HelperMethods.slider();
-    public static Slider sliderTemp = HelperMethods.slider();
-    public static Slider sliderWater = HelperMethods.slider();
+public class SliderPanel extends VBox {
+    public Slider sliderLight = HelperMethods.slider();
+    public Slider sliderTemp = HelperMethods.slider();
+    public Slider sliderWater = HelperMethods.slider();
 
-    public static Button buttonProfile = HelperMethods.button("Profiles");
-    public static Button buttonSaveProfile = HelperMethods.button("Save to profiles");
+    public Button buttonProfile = HelperMethods.button("Profiles");
+    public Button buttonSaveProfile = HelperMethods.button("Save to profiles");
 
-    public static Label valueLight = new Label(" ");
-    public static Label valueTemp = new Label(" ");
-    public static Label valueWater = new Label(" ");
+    public Label valueLight = new Label(" ");
+    public Label valueTemp = new Label(" ");
+    public Label valueWater = new Label(" ");
 
-    public static TextField numWater = new TextField();
-    public static ComboBox<String> combo = new ComboBox();
-    public static List<String> list = List.of("a month","a week", "a day");
+    public TextField numWater = new TextField();
+    public ComboBox<String> combo = new ComboBox<>();
+    public List<String> list = List.of("a month","a week", "a day");
 
-    static {
+    SliderPanel() {
         valueLight.setStyle("-fx-font-size: 18px;");
         valueTemp.setStyle("-fx-font-size: 18px;");
         valueWater.setStyle("-fx-font-size: 18px;");
@@ -59,18 +59,20 @@ public class SliderPanel {
                 });
 
         combo.getItems().addAll(list);
-    }
 
-    public static VBox sliderPanel() {  // sPanel, buttonbox
-        VBox sliderbox = new VBox(
+        VBox sliderBox = new VBox(
                 new HBox(label("Light"), sliderLight, valueLight),
                 new HBox(label("Temp"), sliderTemp, valueTemp),
                 new HBox(label("Water"), sliderWater,valueWater));
-        sliderbox.setPrefSize(600, 150);
+        sliderBox.setPrefSize(600, 150);
 
-        HBox buttonbox = new HBox(hspace(400), buttonProfile, buttonSaveProfile, hspace(50));
-        buttonbox.setPrefSize(600, 50);
+        HBox buttonBox = new HBox(hspace(400), buttonProfile, buttonSaveProfile, hspace(50));
+        buttonBox.setPrefSize(600, 50);
 
-        return new VBox(vspace(80), sliderbox,buttonbox);
+        this.getChildren().addAll(
+                vspace(80),
+                sliderBox,
+                buttonBox
+        );
     }
 }
