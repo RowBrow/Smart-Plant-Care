@@ -12,6 +12,7 @@ public class MyDB {
     public MyDB() {
         open();
     }
+
     public void open() {
         try {
             String url = "jdbc:sqlite:identifier.sqlite";
@@ -23,6 +24,7 @@ public class MyDB {
             }
         };
     }
+
     public void close() {
         try {
             if (connection != null) {
@@ -105,7 +107,6 @@ public class MyDB {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
-            // Get the
             String deviceId = resultSet.getString("device_id");
             String timestamp = resultSet.getString("datetime");
             int light = resultSet.getInt("light");
@@ -145,7 +146,7 @@ public class MyDB {
 
         try {
             PreparedStatement stmt = connection.prepareStatement(insertionStatement);
-            stmt.setInt(1, 0); // The database should decide the ID
+            stmt.setInt(1, 0); // The database should decide the ID of the measurement
             stmt.setString(2, measurement.deviceId());
             stmt.setString(3, measurement.timestamp());
             stmt.setInt(4, measurement.light()); //INT
