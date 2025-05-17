@@ -12,14 +12,15 @@ public class Model {
             """
             SELECT * FROM measurement
             ORDER BY datetime DESC LIMIT 1
-            """);
+            """
+    );
   }
 
   public void insertMeasurement(Measurement measurement) throws SQLException {
     db.insertMeasurement(measurement);
   }
 
-  public void getAllMeasurementsForDevice(String deviceId) throws SQLException {
+  public void getAllMeasurementsForDevice(String deviceId) {
     db.getMeasurements("SELECT * FROM measurement" +
             " WHERE deviceId = '" + deviceId + "'" +
             " ORDER BY datetime DESC");

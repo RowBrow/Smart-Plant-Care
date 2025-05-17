@@ -22,12 +22,16 @@ public class HelperMethods {
 
     public static List<Button> buttons(String ... strs) {
         List<Button> buttons = new ArrayList<>();
-        for(String s:strs) buttons.add(button(s));
+        for(String s: strs) {
+            buttons.add(button(s));
+        }
         return buttons;
     }
 
-    public static Label label(String s){
-        Label l = new Label(s); l.setPrefSize(150,60); l.setStyle(BUTTON_STYLE);
+    public static Label label(String s) {
+        Label l = new Label(s);
+        l.setPrefSize(150,60);
+        l.setStyle(BUTTON_STYLE);
         return l;
     }
     public static HBox hspace(int i) {

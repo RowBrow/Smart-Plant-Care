@@ -9,11 +9,9 @@ import javafx.scene.control.Button;
 
 import java.util.List;
 
-import static org.example.smartplantcare.HelperMethods.vspace;
-
 public class LeftBar extends VBox {
     static Image logo = new Image(LeftBar.class.getResource("/images/logo.png").toExternalForm());
-    public static String style="-fx-font-family:poppins-italic-text; -fx-font-weight:bold; -fx-font-size: 12px;" ;
+    public static String style="-fx-font-family:poppins-italic-text; -fx-font-weight:bold; -fx-font-size: 12px;";
 
     public LeftBar() {
         List<Button> navButton = HelperMethods.buttons("DashBoard", "AutoMode", "Advanced Mode", "Plant list", "Settings", "FeedBack");
