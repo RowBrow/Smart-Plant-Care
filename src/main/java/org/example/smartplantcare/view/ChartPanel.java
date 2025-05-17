@@ -17,13 +17,11 @@ import javafx.scene.chart.XYChart.Series;
 import org.example.smartplantcare.HelperMethods;
 import org.example.smartplantcare.model.Measurement;
 
-import java.sql.*;
 import java.util.List;
 
 import static org.example.smartplantcare.HelperMethods.vspace;
 
 public class ChartPanel extends VBox {
-    private String deviceId;
     public Button lightChartButton = HelperMethods.button("Light");
     public Button tempChartButton = HelperMethods.button("Temp");
     public Button waterChartButton = HelperMethods.button("Water");
@@ -35,83 +33,49 @@ public class ChartPanel extends VBox {
         TEMP,
         WATER,
         HUMIDITY
-        }
-    public Tile chart;
+    }
 
-//    lightChart.setOnAction(e -> {createChartPanel();});  // createChartPanel should be replaced into each chart
+    public Tile chart;
 
     private static final double TILE_WIDTH = 700;
     private static final double TILE_HEIGHT = 280;
 
-
-    // TODO: Create the function
-    //  that draws the graph depending
-    //  on the type of chart wanted by
-    //  the user (light/temperature/etc.)
-
-    public void drawChart(ChartType chartType,List<Measurement> measurements) {
+    /// Populates the chart based on the desired type
+    /// of chart and by measurements given
+    public void drawChart(ChartType chartType, List<Measurement> measurements) {
         series.getData().clear();
-        for (Measurement m : measurements) {
-            String[] parts = m.timestamp().split("T");
-            String timeLabel = (parts.length >= 2) ? parts[1].substring(0, 8) : m.timestamp();
+
+        // Put a maximum to the data points shown
+        // and check that it is less the total data
+        // points possible to show
+        int NUM_OF_DATA_POINTS = 100;
+        if (measurements.size() < NUM_OF_DATA_POINTS) {
+            NUM_OF_DATA_POINTS = measurements.size();
+        }
+
+        // Make proper
+        for (int i = 0; i < NUM_OF_DATA_POINTS; i++) {
+            Measurement measurement = measurements.get(i);
+            String[] parts = measurement.timestamp().split("T");
+            String timeLabel = (parts.length >= 2) ? parts[1].substring(0, 8) : measurement.timestamp();
 
             switch (chartType) {
-                case LIGHT -> series.getData().add(new XYChart.Data<>(timeLabel, m.light()));
-                case TEMP -> series.getData().add(new XYChart.Data<>(timeLabel, m.temp()));
-                case WATER -> series.getData().add(new XYChart.Data<>(timeLabel, m.water()));
-                case HUMIDITY -> series.getData().add(new XYChart.Data<>(timeLabel, m.humidity()));
+                case LIGHT -> series.getData().add(new XYChart.Data<>(timeLabel, measurement.light()));
+                case TEMP -> series.getData().add(new XYChart.Data<>(timeLabel, measurement.temp()));
+                case WATER -> series.getData().add(new XYChart.Data<>(timeLabel, measurement.water()));
+                case HUMIDITY -> series.getData().add(new XYChart.Data<>(timeLabel, measurement.humidity()));
             }
         }
-        //changing Title
-        /*
+
         chart.setTitle(switch (chartType) {
             case LIGHT -> "Light Intensity Per Day";
             case TEMP -> "Temperature Per Day";
             case WATER -> "Water Level Per Day";
             case HUMIDITY -> "Humidity Per Day";
         });
-        */
-    }
-
-    public void getLightDataFromDB() {
-        series.getData().clear();
-        String DB_URL = "jdbc:sqlite:identifier.sqlite";
-
-        // Select the last 20 measurements and show their time and light readings.
-        String query = "SELECT * FROM measurement ORDER BY timestamp LIMIT 20";
-
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                String timestamp = rs.getString("timestamp");
-                int light = rs.getInt("light");
-
-/*              // 시간 정보만 추출 (예: "05:12 PM")
-                String timeLabel = timestamp.substring(9);  // "hh:mm:ss AM/PM" 추출
-                series.getData().add(new XYChart.Data<>(timeLabel, light));
-                // timestamp 형식: "20250419 05:00:00 PM"
-*/
-                //방법1: 시간 문자열 추출 : 공백 이후 문자열
-                String[] parts = timestamp.split("T");
-                String timeLabel = (parts.length >= 2) ? parts[1].substring(0,8) : timestamp;
-
-                series.getData().add(new XYChart.Data<>(timeLabel, light));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public ChartPanel(String deviceId) {
-        this.deviceId = deviceId;
     }
 
     public ChartPanel() {
-        // getLightDataFromDB();
-
         CategoryAxis xAxis = new CategoryAxis();
         chart = TileBuilder.create()
                 .skinType(Tile.SkinType.SMOOTHED_CHART)

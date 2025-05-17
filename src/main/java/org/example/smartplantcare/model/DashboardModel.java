@@ -1,40 +1,51 @@
 package org.example.smartplantcare.model;
 import org.example.smartplantcare.database.DBConnection;
+import org.example.smartplantcare.view.ChartPanel.ChartType;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-/// Stores the `state` of dashboard
+/// Stores the data of dashboard
+/// required by the controller
 public class DashboardModel {
   DBConnection db = new DBConnection();
+  public List<String> deviceIdList = new ArrayList<>();
   public String currentDeviceId = "";
   public String currentDeviceName = "";
 
+  // statusPanel measurements
   public Integer currentLight = 0;
   public Float currentTemp = 0.0f;
   public Integer currentWater = 0;
   public Float currentHumidity = 0.0f;
 
-  public List<Measurement> measurmentList;
+  // Data for the chartPanel and which
+  // type of chart should be shown
+  public ChartType chartType = ChartType.LIGHT;
+  public List<Measurement> measurementList;
 
-
-  // getting latest value
-  public Measurement getLatestMeasurement() {
-    return db.queryOneMeasurement(
-            """
-            SELECT * FROM measurement
-            ORDER BY timestamp DESC LIMIT 1
-            """
-    );
+  /// Gets the latest measurement made
+  /// by the device with ID `currentDeviceId`
+  public void getLatestMeasurement() {
+    Measurement measurement = db.queryOneMeasurement("SELECT * FROM measurement where device_id = '" + currentDeviceId + "' ORDER BY timestamp DESC LIMIT 1");
+    if (measurement != null) {
+      currentLight = measurement.light();
+      currentTemp = measurement.temp();
+      currentWater = measurement.water();
+      currentHumidity = measurement.humidity();
+    } else {
+      System.out.println("[WARN]: No measurement found");
+    }
   }
 
-  public void insertMeasurement(Measurement measurement) throws SQLException {
-    db.insertMeasurement(measurement);
+  /// Updates `measurementList` with measurements
+  /// made by device with ID `currentDeviceId`
+  public void updateMeasurementList() {
+    measurementList = db.getMeasurements("SELECT * FROM measurement WHERE device_id = '" + currentDeviceId + "' ORDER BY timestamp DESC");
   }
 
-  public void getAllMeasurementsForDevice(String deviceId) {
-    db.getMeasurements("SELECT * FROM measurement" +
-            " WHERE deviceId = '" + deviceId + "'" +
-            " ORDER BY timestamp DESC");
+  /// Updates the chart type desired by the user
+  public void updateChartType(ChartType chartType) {
+    this.chartType = chartType;
   }
 }

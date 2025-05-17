@@ -25,25 +25,25 @@ public class SliderPanel extends VBox {
     public Label valueLight = new Label(" ");
     public Label valueTemp = new Label(" ");
     public Label valueWater = new Label(" ");
-
     public TextField numWater = new TextField();
+
     public ComboBox<String> combo = new ComboBox<>();
     public List<String> list = List.of("a month","a week", "a day");
 
-    SliderPanel() {
+    public SliderPanel() {
         valueLight.setStyle("-fx-font-size: 18px;");
         valueTemp.setStyle("-fx-font-size: 18px;");
         valueWater.setStyle("-fx-font-size: 18px;");
 
         sliderLight.valueProperty().addListener(
-                new ChangeListener<Number>() {
+                new ChangeListener<>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         valueLight.setText(String.valueOf(newValue.intValue()));
                     }
                 });
         sliderTemp.valueProperty().addListener(
-                new ChangeListener<Number>() {
+                new ChangeListener<>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         valueTemp.setText(String.valueOf(newValue.intValue()));
@@ -51,7 +51,7 @@ public class SliderPanel extends VBox {
                 });
 
         sliderWater.valueProperty().addListener(
-                new ChangeListener<Number>() {
+                new ChangeListener<>() {
                     public void changed(ObservableValue<? extends Number>
                                                 observable, Number oldValue, Number newValue) {
                         valueWater.setText(String.valueOf(newValue.intValue()));

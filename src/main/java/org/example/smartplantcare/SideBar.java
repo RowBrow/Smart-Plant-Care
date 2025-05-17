@@ -9,19 +9,15 @@ import javafx.scene.control.Button;
 
 import java.util.List;
 
-public class LeftBar extends VBox {
-    static Image logo = new Image(LeftBar.class.getResource("/images/logo.png").toExternalForm());
+public class SideBar extends VBox {
+    static Image logo = new Image(SideBar.class.getResource("/images/logo.png").toExternalForm());
     public static String style="-fx-font-family:poppins-italic-text; -fx-font-weight:bold; -fx-font-size: 12px;";
 
-    public LeftBar() {
+    public SideBar() {
         List<Button> navButton = HelperMethods.buttons("DashBoard", "AutoMode", "Advanced Mode", "Plant list", "Settings", "FeedBack");
-        navButton.get(0).setOnMouseClicked(e -> {
-            MainApp.switchScene(MainApp.getChartPanel());
-        });
+        navButton.get(0).setOnMouseClicked(_ -> MainApp.switchScene(MainApp.getDashboardScene()));
 
-        navButton.get(2).setOnMouseClicked(e -> {
-            MainApp.switchScene(MainApp.getSliderPanel());
-        });
+        navButton.get(2).setOnMouseClicked(_ -> MainApp.switchScene(MainApp.getAdvancedModeScene()));
         ImageView logoImageView = new ImageView(logo);
         logoImageView.setFitWidth(150);  // Resize width
         logoImageView.setPreserveRatio(true);

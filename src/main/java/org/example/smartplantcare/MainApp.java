@@ -4,71 +4,60 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
-import javafx.util.Duration;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.example.smartplantcare.controller.DashboardController;
+import org.example.smartplantcare.database.DBConnection;
 import org.example.smartplantcare.model.Measurement;
 import org.example.smartplantcare.model.DashboardModel;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.example.smartplantcare.view.ChartPanel;
-import org.example.smartplantcare.view.StatusPanel;
+import org.example.smartplantcare.view.AdvancedModeView;
+import org.example.smartplantcare.view.DashboardView;
 import org.json.*;
 
 public class MainApp extends Application {
-    public MainApp() {}
-    static DashboardModel model = new DashboardModel();
+    /// The MQTT client responsible for
+    /// - receiving sensor measurements from devices
+    /// - sending commands to said devices
+    static MqttClient mqttClient;
+
+    // Dashboard classes
+    static DashboardModel dashboardModel = new DashboardModel();
+    static DashboardView dashboardView = new DashboardView();
+    private static final DashboardController controller = new DashboardController(dashboardView, dashboardModel);
+
+    // AdvancedMode classes
+    static AdvancedModeView advancedModeView = new AdvancedModeView();
 
     private static final HBox mainPane = new HBox();
-    private static VBox sliderPanel;
-    private static Pane chartPanel;
     private static final VBox right = new VBox();
-    private StatusPanel statusPanel;
 
     @Override
     public void start(Stage stage) {
-        //updating values every 30 seconds
-        Timeline simulateSensor = new Timeline(
-                new KeyFrame(Duration.seconds(1), e -> {
-                    updateMeasurement();
-                })
-        );
-        simulateSensor.setCycleCount(Timeline.INDEFINITE);
-        simulateSensor.play();
-
         // LeftBar
-        VBox left = new LeftBar();
+        VBox sideBar = new SideBar();
 
-        // Status Panel
-        statusPanel = new StatusPanel();
-        updateMeasurement();
-
-        // We merge the status panel and the slider panel
-
-        // Dashboard:
-        chartPanel = new ChartPanel();
-
-        //Slider
-        sliderPanel = new SliderPanel();
-
-        // We start with Dashboard
-        right.getChildren().add(statusPanel);
-        right.getChildren().add(chartPanel);
+        // Initialize the application
+        // with the dashboardView as the
+        // active view
+        right.getChildren().add(dashboardView);
         right.setAlignment(Pos.CENTER);
 
+        // Make the right view grow respective
+        // to the application window
         VBox.setVgrow(right, Priority.ALWAYS);
         HBox.setHgrow(right, Priority.ALWAYS);
 
+        // Give padding to the right view
         right.setPadding(new Insets(20));
 
         //We merge leftBar and Dashboard
-        mainPane.getChildren().addAll(left, right);
+        mainPane.getChildren().addAll(sideBar, right);
 
         Scene scene = new Scene(mainPane);
         scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
@@ -78,31 +67,17 @@ public class MainApp extends Application {
     }
 
     public static void switchScene(Pane pane) {
-        right.getChildren().set(1, pane);
-        right.setPrefSize(800,700);
+        right.getChildren().set(0, pane);
     }
 
-    //Return left panel
-    public static Pane getSliderPanel() {
-        return sliderPanel;
+    /// Return the Dashboard view
+    public static Pane getDashboardScene() {
+        return dashboardView;
     }
 
-    //Return right panel
-    public static Pane getChartPanel() {
-        return chartPanel;
-    }
-
-    public void updateMeasurement() {
-        Measurement measurement = model.getLatestMeasurement();
-        measurement = new Measurement("0", "0", 10, 600, 500, 600);
-        if (measurement != null) {
-            statusPanel.drawStatus(
-                    measurement.light(),
-                    measurement.temp(),
-                    measurement.water(),
-                    measurement.humidity()
-            );
-        }
+    /// Return the AdvancedMode view
+    public static Pane getAdvancedModeScene() {
+        return advancedModeView;
     }
 
     public static void main(String[] args) {
@@ -118,6 +93,7 @@ public class MainApp extends Application {
     }
 
     private static class MQTTDataGatheringCallback implements MqttCallback {
+        DBConnection dbConnection = new DBConnection();
         @Override
         public void connectionLost(Throwable throwable) {
             System.out.println("Connection lost");
@@ -137,16 +113,22 @@ public class MainApp extends Application {
             String standardizedNow = now.format(DateTimeFormatter.ISO_DATE_TIME);
 
             Measurement measurement = new Measurement(standardizedNow, deviceId, light, temperature, water, humidity);
-
-            model.insertMeasurement(measurement);
+            dbConnection.insertMeasurement(measurement);
         }
 
         @Override
         public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
+            System.out.println("[INFO]: Message sent to: " + iMqttDeliveryToken.getTopics());
+            try {
+                System.out.println("[INFO]: Message content:\n" + iMqttDeliveryToken.getMessage().toString());
+            } catch (MqttException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
+    /// Initializes the MQTT client
+    /// with the gives
     private static void initializeMQTTClient() {
         final String MQTT_DATA_GATHERING_TOPIC = "HiGrowSensor/send_data";
         final String MQTT_ACTION_SENDING_TOPIC = "HiGrowSensor/send_action";
@@ -158,7 +140,7 @@ public class MainApp extends Application {
 
         try {
             // Initialize the MQTT client
-            MqttClient mqttClient = new MqttClient(MQTT_BROKER, MQTT_CLIENT_ID, memoryPersistence);
+            mqttClient = new MqttClient(MQTT_BROKER, MQTT_CLIENT_ID, memoryPersistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
 
             // Set connection/reconnection options

@@ -72,6 +72,8 @@ public class StatusPanel extends VBox {
         this.setPadding(new Insets(20));
     }
 
+    /// Updates the values seen in the statusPanel
+    /// based on the given new measurements
     public void drawStatus(float light, float temperature, float water, float humidity) {
         // Update the measurement texts based
         // on the new measurement
@@ -79,12 +81,5 @@ public class StatusPanel extends VBox {
         temperatureMeasurement.setText(temperature + "°");
         waterMeasurement.setText(String.valueOf(water));
         humidityMeasurement.setText(humidity + "%");
-    }
-
-    private void drawText(int x, int y,int sz, String s) {
-        int x0=20,xd=160, sz1=20, sz2=40;
-        //GraphicsContext gc=canvas.getGraphicsContext2D();
-        //gc.setFont(Font.font(Font.getDefault().getFamily(), FontWeight.BOLD ,sz));
-        //gc.fillText(s, x,y);
     }
 }
