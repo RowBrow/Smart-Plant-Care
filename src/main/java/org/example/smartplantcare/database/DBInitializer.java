@@ -21,7 +21,7 @@ public class DBInitializer {
         """;
 
         try {
-            Connection conn = DBConnection.getConnection();
+            Connection conn = DBConnectionUser.getConnection();
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (Exception e) {

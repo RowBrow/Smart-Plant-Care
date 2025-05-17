@@ -1,4 +1,4 @@
-package org.example.smartplantcare;
+package org.example.smartplantcare.view;
 
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.TileBuilder;
@@ -14,8 +14,11 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.chart.XYChart.Series;
+import org.example.smartplantcare.HelperMethods;
+import org.example.smartplantcare.model.Measurement;
 
 import java.sql.*;
+import java.util.List;
 
 import static org.example.smartplantcare.HelperMethods.vspace;
 
@@ -32,7 +35,7 @@ public class ChartPanel extends VBox {
         TEMP,
         WATER,
         HUMIDITY
-    }
+        }
     public Tile chart;
 
 //    lightChart.setOnAction(e -> {createChartPanel();});  // createChartPanel should be replaced into each chart
@@ -45,25 +48,30 @@ public class ChartPanel extends VBox {
     //  that draws the graph depending
     //  on the type of chart wanted by
     //  the user (light/temperature/etc.)
-    /*
-    public void drawChart(ChartType chartType) {
+
+    public void drawChart(ChartType chartType,List<Measurement> measurements) {
         series.getData().clear();
-        switch (chartType) {
-            case LIGHT -> {
+        for (Measurement m : measurements) {
+            String[] parts = m.timestamp().split("T");
+            String timeLabel = (parts.length >= 2) ? parts[1].substring(0, 8) : m.timestamp();
 
-            }
-            case TEMP -> {
-
-            }
-            case WATER -> {
-
-            }
-            case HUMIDITY -> {
-
+            switch (chartType) {
+                case LIGHT -> series.getData().add(new XYChart.Data<>(timeLabel, m.light()));
+                case TEMP -> series.getData().add(new XYChart.Data<>(timeLabel, m.temp()));
+                case WATER -> series.getData().add(new XYChart.Data<>(timeLabel, m.water()));
+                case HUMIDITY -> series.getData().add(new XYChart.Data<>(timeLabel, m.humidity()));
             }
         }
+        //changing Title
+        /*
+        chart.setTitle(switch (chartType) {
+            case LIGHT -> "Light Intensity Per Day";
+            case TEMP -> "Temperature Per Day";
+            case WATER -> "Water Level Per Day";
+            case HUMIDITY -> "Humidity Per Day";
+        });
+        */
     }
-    */
 
     public void getLightDataFromDB() {
         series.getData().clear();
@@ -77,17 +85,17 @@ public class ChartPanel extends VBox {
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                String datetime = rs.getString("datetime");
+                String timestamp = rs.getString("timestamp");
                 int light = rs.getInt("light");
 
 /*              // 시간 정보만 추출 (예: "05:12 PM")
-                String timeLabel = datetime.substring(9);  // "hh:mm:ss AM/PM" 추출
+                String timeLabel = timestamp.substring(9);  // "hh:mm:ss AM/PM" 추출
                 series.getData().add(new XYChart.Data<>(timeLabel, light));
-                // datetime 형식: "20250419 05:00:00 PM"
+                // timestamp 형식: "20250419 05:00:00 PM"
 */
                 //방법1: 시간 문자열 추출 : 공백 이후 문자열
-                String[] parts = datetime.split("T");
-                String timeLabel = (parts.length >= 2) ? parts[1].substring(0,8) : datetime;
+                String[] parts = timestamp.split("T");
+                String timeLabel = (parts.length >= 2) ? parts[1].substring(0,8) : timestamp;
 
                 series.getData().add(new XYChart.Data<>(timeLabel, light));
             }
@@ -98,21 +106,13 @@ public class ChartPanel extends VBox {
     }
 
     public ChartPanel(String deviceId) {
-        this.deviceId = null;
+        this.deviceId = deviceId;
     }
 
     public ChartPanel() {
-        getLightDataFromDB();
+        // getLightDataFromDB();
 
         CategoryAxis xAxis = new CategoryAxis();
-
-        // 필요한 라벨만 리스트에 추가
-/*      xAxis.setCategories(FXCollections.observableArrayList(
-                "0:00 AM", "2:00 AM","4:00 AM", "6:00 AM", "8:00 AM",
-                "10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM","8:00 PM", "10:00 PM","12:00 PM"
-        ));
-        xAxis.setTickLabelFont(Font.font("Arial", 14));
-*/
         chart = TileBuilder.create()
                 .skinType(Tile.SkinType.SMOOTHED_CHART)
                 .prefSize(TILE_WIDTH, TILE_HEIGHT)

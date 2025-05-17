@@ -1,4 +1,4 @@
-package org.example.smartplantcare;
+package org.example.smartplantcare.view;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

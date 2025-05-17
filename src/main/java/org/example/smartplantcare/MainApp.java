@@ -12,16 +12,18 @@ import javafx.stage.Stage;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.example.smartplantcare.model.Measurement;
-import org.example.smartplantcare.model.Model;
+import org.example.smartplantcare.model.DashboardModel;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.example.smartplantcare.view.ChartPanel;
+import org.example.smartplantcare.view.StatusPanel;
 import org.json.*;
 
 public class MainApp extends Application {
     public MainApp() {}
-    static Model model = new Model();
+    static DashboardModel model = new DashboardModel();
 
     private static final HBox mainPane = new HBox();
     private static VBox sliderPanel;

@@ -18,7 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
-import org.example.smartplantcare.database.DBConnection;
+import org.example.smartplantcare.database.DBConnectionUser;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -152,7 +152,7 @@ public class Registration extends Application {
             String location = locationchoiceBox.getValue();
 
             // 예시: DB에 저장
-            try (Connection conn = DBConnection.getConnection()) {
+            try (Connection conn = DBConnectionUser.getConnection()) {
                 String sql = """
                 INSERT INTO users 
                 (name, dob, gender, reservation, technologies, education, location) 
