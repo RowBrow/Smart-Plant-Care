@@ -97,7 +97,7 @@ void setup() {
   Serial.begin(115200);
 
   dht.begin();
-
+  pinMode(LIGHT_PIN, INPUT);
   setup_wifi();
   mqttClient.setServer(MQTT_SERVER, MQTT_PORT); // Set up mqtt client
   
@@ -142,10 +142,16 @@ void sensorsData(char* body) {
   int waterlevel = analogRead(soilpin);
   int lightlevel = analogRead(LIGHT_PIN);
   
-  waterlevel = map(waterlevel, 0, 4095, 0, 1023);
-  waterlevel = constrain(waterlevel, 0, 1023);
-  lightlevel = map(lightlevel, 0, 4095, 0, 1023);
-  lightlevel = constrain(lightlevel, 0, 1023);
+
+  waterlevel = constrain(waterlevel,350,850);
+  waterlevel = map(waterlevel,350,850,0,100);
+  waterlevel *=-1;
+  waterlevel += 100; 
+
+  lightlevel = constrain(lightlevel, 0, 250);
+  lightlevel = map(lightlevel, 0, 250, 0, 100);
+  lightlevel *= -1;
+  lightlevel += 100;
   
   // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
   float humidity = dht.readHumidity();
