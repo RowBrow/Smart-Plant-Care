@@ -6,10 +6,35 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/// A singleton class responsible
+/// for managing connections to the
+/// database.
 public class DBConnection {
+    /// Holds the single copy of the
+    /// database class
+    static DBConnection instance;
+
+    /// Returns the unique instance
+    /// of DBConnection
+    public static DBConnection getInstance() {
+        // If there was no instance made already
+        if (instance == null) {
+            // Make a new instance
+            instance = new DBConnection();
+        }
+        // Return existing copy of DBConnection
+        return instance;
+    }
+
     Connection connection = null;
 
-    public DBConnection() {
+    /// Constructs the single
+    /// instance of DBConnection
+    ///
+    /// It is private so that
+    /// other classes can not
+    /// call the constructor.
+    private DBConnection() {
         open();
     }
 
@@ -108,7 +133,7 @@ public class DBConnection {
             ResultSet resultSet = statement.executeQuery(query);
 
             String deviceId = resultSet.getString("device_id");
-            String timestamp = resultSet.getString("datetime");
+            String timestamp = resultSet.getString("timestamp");
             int light = resultSet.getInt("light");
             float temp = resultSet.getFloat("temp");
             int water = resultSet.getInt("water");
@@ -138,21 +163,20 @@ public class DBConnection {
         }
 
         String insertionStatement = """
-        INSERT OR IGNORE INTO measurement 
-        (id, device_id, timestamp, light, temp, water, humidity) 
-        VALUES 
-        (?, ?, ?, ?, ?, ?, ?)
-        """;
+        INSERT INTO measurement\s
+        (device_id, timestamp, light, temp, water, humidity)\s
+        VALUES\s
+        (?, ?, ?, ?, ?, ?)
+       \s""";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(insertionStatement);
-            stmt.setInt(1, 0); // The database should decide the ID of the measurement
-            stmt.setString(2, measurement.deviceId());
-            stmt.setString(3, measurement.timestamp());
-            stmt.setInt(4, measurement.light()); //INT
-            stmt.setFloat(5, measurement.temp());
-            stmt.setInt(6, measurement.water()); //INT
-            stmt.setFloat(7, measurement.humidity());
+            stmt.setString(1, measurement.deviceId());
+            stmt.setString(2, measurement.timestamp());
+            stmt.setInt(3, measurement.light()); //INT
+            stmt.setFloat(4, measurement.temp());
+            stmt.setInt(5, measurement.water()); //INT
+            stmt.setFloat(6, measurement.humidity());
 
             stmt.executeUpdate();
         } catch (SQLException e) {

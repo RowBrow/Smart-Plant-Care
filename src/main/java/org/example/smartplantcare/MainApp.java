@@ -93,7 +93,7 @@ public class MainApp extends Application {
     }
 
     private static class MQTTDataGatheringCallback implements MqttCallback {
-        DBConnection dbConnection = new DBConnection();
+        DBConnection dbConnection = DBConnection.getInstance();
         @Override
         public void connectionLost(Throwable throwable) {
             System.out.println("Connection lost");
@@ -112,7 +112,7 @@ public class MainApp extends Application {
             LocalDateTime now = LocalDateTime.now();
             String standardizedNow = now.format(DateTimeFormatter.ISO_DATE_TIME);
 
-            Measurement measurement = new Measurement(standardizedNow, deviceId, light, temperature, water, humidity);
+            Measurement measurement = new Measurement(deviceId, standardizedNow, light, temperature, water, humidity);
             dbConnection.insertMeasurement(measurement);
         }
 

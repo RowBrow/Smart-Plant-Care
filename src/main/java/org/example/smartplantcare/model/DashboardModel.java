@@ -8,10 +8,16 @@ import java.util.List;
 /// Stores the data of dashboard
 /// required by the controller
 public class DashboardModel {
-  DBConnection db = new DBConnection();
+  DBConnection db = DBConnection.getInstance();
   public List<String> deviceIdList = new ArrayList<>();
-  public String currentDeviceId = "";
-  public String currentDeviceName = "";
+  /// Holds the deviceId of the device
+  /// currently inspected.
+  ///
+  /// Currently hard-coded to the ID
+  /// of the singular device we're using
+  /// as a proof of concept.
+  public String currentDeviceId = "44943689428528";
+  public String currentDeviceName = "HiGrow Monitor";
 
   // statusPanel measurements
   public Integer currentLight = 0;
@@ -27,7 +33,7 @@ public class DashboardModel {
   /// Gets the latest measurement made
   /// by the device with ID `currentDeviceId`
   public void getLatestMeasurement() {
-    Measurement measurement = db.queryOneMeasurement("SELECT * FROM measurement where device_id = '" + currentDeviceId + "' ORDER BY timestamp DESC LIMIT 1");
+    Measurement measurement = db.queryOneMeasurement("SELECT * FROM measurement where device_id = '" + currentDeviceId + "' ORDER BY timestamp DESC");
     if (measurement != null) {
       currentLight = measurement.light();
       currentTemp = measurement.temp();

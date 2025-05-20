@@ -4,7 +4,6 @@ drop table if exists profile;
 
 create table measurement
 (
-    id INTEGER PRIMARY KEY,
     device_id REFERENCES device(id),
     timestamp TIMESTAMP,
     light    INTEGER,
