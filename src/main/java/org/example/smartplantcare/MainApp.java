@@ -9,22 +9,17 @@ import javafx.stage.Stage;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.example.smartplantcare.controller.DashboardController;
-import org.example.smartplantcare.database.DBConnection;
-import org.example.smartplantcare.model.Measurement;
+import org.example.smartplantcare.database.SPCMqttCallback;
 import org.example.smartplantcare.model.DashboardModel;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.example.smartplantcare.view.AdvancedModeView;
 import org.example.smartplantcare.view.DashboardView;
-import org.json.*;
 
 public class MainApp extends Application {
     /// The MQTT client responsible for
     /// - receiving sensor measurements from devices
     /// - sending commands to said devices
-    static MqttClient mqttClient;
+    private static MqttClient mqttClient;
 
     // Dashboard classes
     static DashboardModel dashboardModel = new DashboardModel();
@@ -92,40 +87,7 @@ public class MainApp extends Application {
         System.exit(0);
     }
 
-    private static class MQTTDataGatheringCallback implements MqttCallback {
-        DBConnection dbConnection = DBConnection.getInstance();
-        @Override
-        public void connectionLost(Throwable throwable) {
-            System.out.println("Connection lost");
-        }
 
-        @Override
-        public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-            System.out.println(topic + " : " + new String(mqttMessage.getPayload()));
-            JSONObject json = new JSONObject(new String(mqttMessage.getPayload()));
-            int water = json.getInt("water");
-            float humidity = json.getFloat("humidity");
-            float temperature = json.getFloat("temperature");
-            int light = json.getInt("light");
-            String deviceId = json.getString("deviceId");
-
-            LocalDateTime now = LocalDateTime.now();
-            String standardizedNow = now.format(DateTimeFormatter.ISO_DATE_TIME);
-
-            Measurement measurement = new Measurement(deviceId, standardizedNow, light, temperature, water, humidity);
-            dbConnection.insertMeasurement(measurement);
-        }
-
-        @Override
-        public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-            System.out.println("[INFO]: Message sent to: " + iMqttDeliveryToken.getTopics());
-            try {
-                System.out.println("[INFO]: Message content:\n" + iMqttDeliveryToken.getMessage().toString());
-            } catch (MqttException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 
     /// Initializes the MQTT client
     /// with the gives
@@ -161,7 +123,7 @@ public class MainApp extends Application {
             mqttClient.subscribe(MQTT_DATA_GATHERING_TOPIC);
 
             // Set callback class for processing gathered data
-            mqttClient.setCallback(new MQTTDataGatheringCallback());
+            mqttClient.setCallback(new SPCMqttCallback());
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }
