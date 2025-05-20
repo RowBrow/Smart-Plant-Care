@@ -16,7 +16,7 @@ public class DashboardModel {
   /// Currently hard-coded to the ID
   /// of the singular device we're using
   /// as a proof of concept.
-  public String currentDeviceId = "44943689428528";
+  public String currentDeviceId = "233417020993736";
   public String currentDeviceName = "HiGrow Monitor";
 
   // statusPanel measurements
@@ -33,7 +33,7 @@ public class DashboardModel {
   /// Gets the latest measurement made
   /// by the device with ID `currentDeviceId`
   public void getLatestMeasurement() {
-    Measurement measurement = db.queryOneMeasurement("SELECT * FROM measurement where device_id = '" + currentDeviceId + "' ORDER BY timestamp DESC");
+    Measurement measurement = db.queryOneMeasurement("SELECT * FROM measurement where device_id = '" + currentDeviceId + "' ORDER BY timestamp DESC LIMIT 1");
     if (measurement != null) {
       currentLight = measurement.light();
       currentTemp = measurement.temp();
@@ -47,7 +47,7 @@ public class DashboardModel {
   /// Updates `measurementList` with measurements
   /// made by device with ID `currentDeviceId`
   public void updateMeasurementList() {
-    measurementList = db.getMeasurements("SELECT * FROM measurement WHERE device_id = '" + currentDeviceId + "' ORDER BY timestamp DESC");
+    measurementList = db.getMeasurements("SELECT * FROM measurement WHERE device_id = '" + currentDeviceId + "' ORDER BY timestamp");
   }
 
   /// Updates the chart type desired by the user

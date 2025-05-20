@@ -5,8 +5,8 @@ import org.example.smartplantcare.ActionBarView;
 import org.example.smartplantcare.SliderPanel;
 
 public class AdvancedModeView extends VBox {
-    private VBox statusPanel;
-    private VBox sliderPanel;
+    public StatusPanel statusPanel;
+    public SliderPanel sliderPanel;
     private VBox actionBar;
 
     public AdvancedModeView() {

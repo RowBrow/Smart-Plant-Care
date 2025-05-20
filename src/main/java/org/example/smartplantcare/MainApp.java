@@ -8,8 +8,10 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.example.smartplantcare.controller.AdvancedModeController;
 import org.example.smartplantcare.controller.DashboardController;
 import org.example.smartplantcare.database.SPCMqttCallback;
+import org.example.smartplantcare.model.AdvancedModeModel;
 import org.example.smartplantcare.model.DashboardModel;
 
 import org.example.smartplantcare.view.AdvancedModeView;
@@ -21,13 +23,22 @@ public class MainApp extends Application {
     /// - sending commands to said devices
     private static MqttClient mqttClient;
 
+    public static final String MQTT_BROKER = "tcp://public.cloud.shiftr.io:1883";
+    public static final String MQTT_CLIENT_ID = "Smart_Plant_Care_App";
+    public static final String MQTT_USERNAME = "public";
+    public static final String MQTT_PASSWORD = "public";
+
     // Dashboard classes
-    static DashboardModel dashboardModel = new DashboardModel();
-    static DashboardView dashboardView = new DashboardView();
-    private static final DashboardController controller = new DashboardController(dashboardView, dashboardModel);
+    static DashboardView dashboardView;
+    static DashboardModel dashboardModel;
+    private static DashboardController dashboardController;
 
     // AdvancedMode classes
-    static AdvancedModeView advancedModeView = new AdvancedModeView();
+    static AdvancedModeView advancedModeView;
+    static AdvancedModeModel advancedModeModel;
+    private static AdvancedModeController advancedModeController;
+
+
 
     private static final HBox mainPane = new HBox();
     private static final VBox right = new VBox();
@@ -78,7 +89,7 @@ public class MainApp extends Application {
     public static void main(String[] args) {
         // Initialize the MQTT client
         initializeMQTTClient();
-
+        initializeMVC();
         // Launch the JavaFX application
         launch(args);
 
@@ -90,14 +101,8 @@ public class MainApp extends Application {
 
 
     /// Initializes the MQTT client
-    /// with the gives
     private static void initializeMQTTClient() {
         final String MQTT_DATA_GATHERING_TOPIC = "HiGrowSensor/send_data";
-        final String MQTT_ACTION_SENDING_TOPIC = "HiGrowSensor/send_action";
-        final String MQTT_BROKER = "tcp://public.cloud.shiftr.io:1883";
-        final String MQTT_CLIENT_ID = "Smart_Plant_Care_App";
-        final String MQTT_USERNAME = "public";
-        final String MQTT_PASSWORD = "public";
         MemoryPersistence memoryPersistence = new MemoryPersistence();
 
         try {
@@ -127,5 +132,18 @@ public class MainApp extends Application {
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void initializeMVC(){
+        dashboardView = new DashboardView();
+        dashboardModel = new DashboardModel();
+        dashboardController = new DashboardController(dashboardView, dashboardModel);
+
+        // AdvancedMode classes
+        advancedModeView = new AdvancedModeView();
+        advancedModeModel = new AdvancedModeModel();
+        advancedModeController = new AdvancedModeController(advancedModeView, advancedModeModel, mqttClient);
+
+
     }
 }
