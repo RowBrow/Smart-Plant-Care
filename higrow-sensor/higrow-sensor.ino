@@ -1,10 +1,11 @@
+// Taken and adapted from https://github.com/lucafabbri/HiGrow-Arduino-Esp/blob/master/HiGrowEsp32/HiGrowEsp32.ino
+
 #include <WiFi.h> // For WiFi
 #include <Esp.h>
 #include <PubSubClient.h> // For MQTT client
 #include "ArduinoJson-v7.3.1.h"
 #include "DHT.h" // For humidity/temperature sensor
 
-//#define DHTTYPE DHT11   // DHT 11
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 #define DHTTYPE DHT11   // DHT 22  (AM2302), AM2321
 #define uS_TO_S_FACTOR 1000000LL
@@ -136,7 +137,7 @@ void loop() {
   delay(5000);
 }
 
-void sensorsData(char* body){
+void sensorsData(char* body) {
 
   int waterlevel = analogRead(soilpin);
   int lightlevel = analogRead(LIGHT_PIN);
