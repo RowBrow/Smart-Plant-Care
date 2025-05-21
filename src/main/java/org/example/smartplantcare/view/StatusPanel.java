@@ -80,6 +80,6 @@ public class StatusPanel extends VBox {
         lightMeasurement.setText(String.valueOf(light));
         temperatureMeasurement.setText(temperature + "°");
         waterMeasurement.setText(String.valueOf(water));
-        humidityMeasurement.setText(humidity + "%");
+        humidityMeasurement.setText(humidity + "");
     }
 }
