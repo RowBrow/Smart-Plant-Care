@@ -9,8 +9,9 @@
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 #define DHTTYPE DHT11   // DHT 22  (AM2302), AM2321
 #define uS_TO_S_FACTOR 1000000LL
-int period = 1000; 
-unsigned long last_transmission;
+
+const int MEASUREMENT_INTERVAL = 1000;
+unsigned long lastTransmission;
 
 // Set up WiFi and MQTT clients
 WiFiClient wifiClient;
@@ -18,14 +19,18 @@ PubSubClient mqttClient(wifiClient);
 
 uint64_t chipid; // Can be used as deviceId
 
-const int dhtpin = 22;
-const int soilpin = 32;
+// Configure pins for readings
+const int DHT_PIN = 22;
+const int SOIL_PIN = 32;
 const int POWER_PIN = 34;
 const int LIGHT_PIN = 33;
+
+// Configure pins for output LEDs
 const int LIGHT_LED_PIN = 16; 
 const int WATER_LED_PIN = 17; 
+
 // Initialize DHT sensor.
-DHT dht(dhtpin, DHTTYPE);
+DHT dht(DHT_PIN, DHTTYPE);
 
 // Temporary variables
 static char celsiusTemp[7];
@@ -51,13 +56,24 @@ const char* MQTT_PUBLISH_TOPIC   = "HiGrowSensor/send_data";
 
 char deviceid[21];
 
+// Set up variables to hold
+// information about whether
+// to turn water and light on
+// or not
 bool waterOn; 
 bool lightOn; 
 
-long waterLast; 
-long lightLast; 
-int waterOnInterval= 3000;
-int lightOnInterval= 3000;
+// The last time waterOn
+// or lightOn turned true
+unsigned long waterLast;
+unsigned long lightLast;
+
+// The intervals water or light should
+// stay turned on if an message 
+// commands them to turn on
+const int waterOnInterval= 3000;
+const int lightOnInterval= 3000;
+
 /**
  * Attempt to connect to the wifi
  * for a number of tries
@@ -66,6 +82,7 @@ void setup_wifi() {
   Serial.print("Connecting to WiFi...");
   WiFi.begin(SSID, PASSWORD);
 
+  // Try to connect multiple times
   int attempts = 0;
   while (WiFi.status() != WL_CONNECTED && attempts < MAX_CONNECTION_TRIES) {
     delay(500);
@@ -85,7 +102,7 @@ void setup_wifi() {
 /**
  * Attempt to reconnect to the MQTT server
  */
-void reconnect() {
+void setup_mqtt() {
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
     if (mqttClient.connect(MQTT_CLIENT_ID, MQTT_USER, MQTT_PASSWORD)) {
@@ -100,29 +117,40 @@ void reconnect() {
   }
 }
 
-
 void setup() {
+  // Set up serial connection for
+  // sending messages when debugging
   Serial.begin(115200);
 
+  // Start sensors to be used in
+  // measurements
   dht.begin();
   pinMode(LIGHT_PIN, INPUT);
+
+  // Set up WiFi and MQTT connection
   setup_wifi();
   mqttClient.setServer(MQTT_SERVER, MQTT_PORT); // Set up mqtt client
-  
-  // TODO: Define the callback function
   mqttClient.setCallback(callback); // Set the callback function for the client
   
+  // Set up outputs (LEDs) and set
+  // their starting value to LOW
   pinMode(WATER_LED_PIN, OUTPUT);
   pinMode(LIGHT_LED_PIN, OUTPUT);
   digitalWrite(WATER_LED_PIN, LOW);
   digitalWrite(LIGHT_LED_PIN, LOW);
 
+  // Create deviceId and print it
+  // to serial connection
   chipid = ESP.getEfuseMac();
   sprintf(deviceid, "%" PRIu64, chipid);
   Serial.print("DeviceId: ");
   Serial.println(deviceid);
 }
 
+/**
+ * Callback function called whenever
+ * a topic subscribed gets a new message
+ */
 void callback(char* topic, byte* payload, unsigned int length) {
   // Check if the topic is the correct topic
   if (strcmp(topic, MQTT_SUBSCRIBE_TOPIC) == 0) {
@@ -144,10 +172,20 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
     waterOn = doc["waterOn"];
     lightOn = doc["lightOn"];
-    if(waterOn)
-    waterLast = millis();
-    if(lightOn)
-    lightLast = millis();
+
+    const unsigned long NOW = millis();
+
+    // Update lastLast and waterLast
+    // based on whether they should be
+    // turned on by this message
+
+    if(waterOn) {
+      waterLast = NOW;
+    }
+
+    if(lightOn) {
+      lightLast = NOW;
+    }
   }
 }
 
@@ -160,25 +198,45 @@ void loop() {
 
   // Check if connection to MQTT broker still exists
   if (!mqttClient.connected()) {
-    reconnect(); // Attempt to reconnect if necessary
+    setup_mqtt(); // Attempt to reconnect if necessary
   }
 
   // every 5 seconds, we want to publish a measurement
-
-  // if waterOn, turn LED on and the same for the lightOn
   
   mqttClient.loop(); // Receive messages
 
-  if(millis() > last_transmission + period) {
+  const unsigned long NOW = millis();
+
+  if(NOW > lastTransmission + MEASUREMENT_INTERVAL) {
     char body[1024];
-    digitalWrite(16, LOW); //switched on
+
+    // Toggle the blue LED on the board to signify a measurement is sent
+    digitalWrite(16, HIGH); 
+    
+    // Read sensor data
     sensorsData(body);
+    // Send new measurement
     mqttClient.publish(MQTT_PUBLISH_TOPIC, body);
+    // Report the data sent on
+    // serial connection for
+    // debugging purposes
     Serial.println(body);
-    last_transmission = millis();
+
+    // Turn the blue LED on the board off again
+    digitalWrite(16, LOW);
+
+    // Update the last transmission time
+    lastTransmission = NOW;
+
+    // Report lightOn and waterOn for
+    // debugging purposes
+    Serial.println("Water: " + String(waterOn));
+    Serial.println("Light: " + String(lightOn));
   }
-  Serial.print("Water: ");
-  Serial.println(waterOn);
+
+  // Depending on waterOn and lightOn
+  // toggle the LEDs
+
   if(waterOn) {
     digitalWrite(WATER_LED_PIN, HIGH);
   } else {
@@ -192,23 +250,33 @@ void loop() {
   }
 }
 
+/**
+ * Make a measurement of sensors
+ * and save a result of them in
+ * the form of a JSON object
+ */
 void sensorsData(char* body) {
-
-  int waterlevel = analogRead(soilpin);
-  int lightlevel = analogRead(LIGHT_PIN);
+  // Read water and light levels
+  // in the environment
+  int waterLevel = analogRead(SOIL_PIN);
+  int lightLevel = analogRead(LIGHT_PIN);
   
+  // Normalize moisture reading such that
+  // 0 means completely dry and 100 means
+  // completely wet
+  waterLevel = constrain(waterLevel,1400,4000);
+  waterLevel = map(waterLevel,1400,4000,0,100);
+  waterLevel *= -1;
+  waterLevel += 100; 
 
-  waterlevel = constrain(waterlevel,1400,4000);
-  waterlevel = map(waterlevel,1400,4000,0,100);
-  waterlevel *= -1;
-  waterlevel += 100; 
-
-
-
-  lightlevel = constrain(lightlevel, 0, 250);
-  lightlevel = map(lightlevel, 0, 250, 0, 100);
-  lightlevel *= -1;
-  lightlevel += 100;
+  // Normalize light reading such that
+  // 0 means totally dark, and 100 means
+  // completely bright (shining a flashlight
+  // directly into the sensor)
+  lightLevel = constrain(lightLevel, 0, 250);
+  lightLevel = map(lightLevel, 0, 250, 0, 100);
+  lightLevel *= -1;
+  lightLevel += 100;
   
   // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
   float humidity = dht.readHumidity();
@@ -220,9 +288,10 @@ void sensorsData(char* body) {
   dtostrf(humidity, 6, 2, humidityTemp);
   
   String did = String(deviceid);
-  String water = String((int)waterlevel);
-  String light = String((int)lightlevel);
+  String water = String((int)waterLevel);
+  String light = String((int)lightLevel);
 
+  // Prepare the message to publish
   strcpy(body, "{\"deviceId\":\"");
   strcat(body, did.c_str());
   strcat(body, "\",\"water\":\"");
