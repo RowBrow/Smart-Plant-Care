@@ -9,8 +9,8 @@
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 #define DHTTYPE DHT11   // DHT 22  (AM2302), AM2321
 #define uS_TO_S_FACTOR 1000000LL
-
-unsigned long now;
+int period = 1000; 
+unsigned long last_transmission;
 
 // Set up WiFi and MQTT clients
 WiFiClient wifiClient;
@@ -22,7 +22,8 @@ const int dhtpin = 22;
 const int soilpin = 32;
 const int POWER_PIN = 34;
 const int LIGHT_PIN = 33;
-
+const int LIGHT_LED_PIN = 16; 
+const int WATER_LED_PIN = 17; 
 // Initialize DHT sensor.
 DHT dht(dhtpin, DHTTYPE);
 
@@ -50,6 +51,13 @@ const char* MQTT_PUBLISH_TOPIC   = "HiGrowSensor/send_data";
 
 char deviceid[21];
 
+bool waterOn; 
+bool lightOn; 
+
+long waterLast; 
+long lightLast; 
+int waterOnInterval= 3000;
+int lightOnInterval= 3000;
 /**
  * Attempt to connect to the wifi
  * for a number of tries
@@ -102,17 +110,47 @@ void setup() {
   mqttClient.setServer(MQTT_SERVER, MQTT_PORT); // Set up mqtt client
   
   // TODO: Define the callback function
-  //mqttClient.setCallback(callback); // Set the callback function for the client
+  mqttClient.setCallback(callback); // Set the callback function for the client
   
-  pinMode(16, OUTPUT); 
-  pinMode(POWER_PIN, INPUT);
-  digitalWrite(16, LOW);  
+  pinMode(WATER_LED_PIN, OUTPUT);
+  pinMode(LIGHT_LED_PIN, OUTPUT);
+  digitalWrite(WATER_LED_PIN, LOW);
+  digitalWrite(LIGHT_LED_PIN, LOW);
 
   chipid = ESP.getEfuseMac();
   sprintf(deviceid, "%" PRIu64, chipid);
   Serial.print("DeviceId: ");
   Serial.println(deviceid);
 }
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  // Check if the topic is the correct topic
+  if (strcmp(topic, MQTT_SUBSCRIBE_TOPIC) == 0) {
+    JsonDocument doc; // For parsing the JSON response
+
+    deserializeJson(doc, (char*) payload); // Parse JSON response
+    
+    // Print the message
+    for (int i = 0; i < length; i++) {
+      Serial.print((char)payload[i]); 
+    }
+    Serial.print("\n"); 
+
+    // If the response is not directed to
+    // this device, do not process further
+    //if (doc["device"] != MQTT_CLIENT_ID) {
+    //  return;
+    //}
+
+    waterOn = doc["waterOn"];
+    lightOn = doc["lightOn"];
+    if(waterOn)
+    waterLast = millis();
+    if(lightOn)
+    lightLast = millis();
+  }
+}
+
 
 void loop() {
   // Check if connection to WiFi still exists
@@ -125,16 +163,33 @@ void loop() {
     reconnect(); // Attempt to reconnect if necessary
   }
 
+  // every 5 seconds, we want to publish a measurement
+
+  // if waterOn, turn LED on and the same for the lightOn
+  
   mqttClient.loop(); // Receive messages
 
+  if(millis() > last_transmission + period) {
+    char body[1024];
+    digitalWrite(16, LOW); //switched on
+    sensorsData(body);
+    mqttClient.publish(MQTT_PUBLISH_TOPIC, body);
+    Serial.println(body);
+    last_transmission = millis();
+  }
+  Serial.print("Water: ");
+  Serial.println(waterOn);
+  if(waterOn) {
+    digitalWrite(WATER_LED_PIN, HIGH);
+  } else {
+    digitalWrite(WATER_LED_PIN, LOW);
+  }
 
-  char body[1024];
-  digitalWrite(16, LOW); //switched on
-  sensorsData(body);
-
-  mqttClient.publish(MQTT_PUBLISH_TOPIC, body);
-  Serial.println(body);
-  delay(5000);
+  if(lightOn) {
+    digitalWrite(LIGHT_LED_PIN, HIGH);
+  } else {
+    digitalWrite(LIGHT_LED_PIN, LOW);
+  }
 }
 
 void sensorsData(char* body) {
@@ -143,10 +198,12 @@ void sensorsData(char* body) {
   int lightlevel = analogRead(LIGHT_PIN);
   
 
-  waterlevel = constrain(waterlevel,350,850);
-  waterlevel = map(waterlevel,350,850,0,100);
-  waterlevel *=-1;
+  waterlevel = constrain(waterlevel,1400,4000);
+  waterlevel = map(waterlevel,1400,4000,0,100);
+  waterlevel *= -1;
   waterlevel += 100; 
+
+
 
   lightlevel = constrain(lightlevel, 0, 250);
   lightlevel = map(lightlevel, 0, 250, 0, 100);
