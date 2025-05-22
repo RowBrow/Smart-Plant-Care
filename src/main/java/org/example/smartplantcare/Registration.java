@@ -18,11 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
-import org.example.smartplantcare.database.DBConnectionUser;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,27 +148,27 @@ public class Registration extends Application {
             String location = locationchoiceBox.getValue();
 
             // 예시: DB에 저장
-            try (Connection conn = DBConnectionUser.getConnection()) {
-                String sql = """
-                INSERT INTO users 
-                (name, dob, gender, reservation, technologies, education, location) 
-                VALUES 
-                (?, ?, ?, ?, ?, ?, ?)
-                """;
-                assert conn != null;
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setString(1, name);
-                stmt.setDate(2, Date.valueOf(dob));
-                stmt.setString(3, gender);
-                stmt.setBoolean(4, reservation);
-                stmt.setString(5, technologies);
-                stmt.setString(6, education);
-                stmt.setString(7, location);
-                stmt.executeUpdate();
-                System.out.println("회원 정보 저장 완료");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            //try (Connection conn = DBConnection) {
+            //    String sql = """
+            //    INSERT INTO users
+            //    (name, dob, gender, reservation, technologies, education, location)
+            //    VALUES
+            //    (?, ?, ?, ?, ?, ?, ?)
+            //    """;
+            //    assert conn != null;
+            //    PreparedStatement stmt = conn.prepareStatement(sql);
+            //    stmt.setString(1, name);
+            //    stmt.setDate(2, Date.valueOf(dob));
+            //    stmt.setString(3, gender);
+            //    stmt.setBoolean(4, reservation);
+            //    stmt.setString(5, technologies);
+            //    stmt.setString(6, education);
+            //    stmt.setString(7, location);
+            //    stmt.executeUpdate();
+            //    System.out.println("회원 정보 저장 완료");
+            //} catch (Exception ex) {
+            //    ex.printStackTrace();
+            //}
         });
 
 

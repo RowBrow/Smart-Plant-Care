@@ -1,4 +1,4 @@
-package org.example.smartplantcare;
+package org.example.smartplantcare.UIComponents;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
@@ -6,6 +6,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
+import org.example.smartplantcare.MainApp;
 
 import java.util.List;
 

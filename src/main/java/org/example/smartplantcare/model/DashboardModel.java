@@ -1,6 +1,6 @@
 package org.example.smartplantcare.model;
 import org.example.smartplantcare.database.DBConnection;
-import org.example.smartplantcare.view.ChartPanel.ChartType;
+import org.example.smartplantcare.UIComponents.ChartPanel.ChartType;
 
 import java.util.ArrayList;
 import java.util.List;

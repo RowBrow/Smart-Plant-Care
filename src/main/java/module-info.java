@@ -20,4 +20,6 @@ module org.example.smartplantcare {
     opens org.example.smartplantcare.model to javafx.fxml;
     exports org.example.smartplantcare.view;
     opens org.example.smartplantcare.view to javafx.fxml;
+    exports org.example.smartplantcare.UIComponents;
+    opens org.example.smartplantcare.UIComponents to javafx.fxml;
 }

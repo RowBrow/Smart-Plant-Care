@@ -1,4 +1,4 @@
-package org.example.smartplantcare;
+package org.example.smartplantcare.UIComponents;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

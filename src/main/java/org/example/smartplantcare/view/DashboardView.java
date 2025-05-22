@@ -3,6 +3,8 @@ package org.example.smartplantcare.view;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import org.example.smartplantcare.UIComponents.ChartPanel;
+import org.example.smartplantcare.UIComponents.StatusPanel;
 
 public class DashboardView extends VBox {
     public final StatusPanel statusPanel = new StatusPanel();

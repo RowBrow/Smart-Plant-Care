@@ -1,4 +1,4 @@
-package org.example.smartplantcare.view;
+package org.example.smartplantcare;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;

@@ -1,4 +1,4 @@
-package org.example.smartplantcare.view;
+package org.example.smartplantcare.UIComponents;
 
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.TileBuilder;
@@ -14,12 +14,11 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.chart.XYChart.Series;
-import org.example.smartplantcare.HelperMethods;
 import org.example.smartplantcare.model.Measurement;
 
 import java.util.List;
 
-import static org.example.smartplantcare.HelperMethods.vspace;
+import static org.example.smartplantcare.UIComponents.HelperMethods.vspace;
 
 public class ChartPanel extends VBox {
     public Button lightChartButton = HelperMethods.button("Light");

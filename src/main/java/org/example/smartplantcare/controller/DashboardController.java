@@ -4,7 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import org.example.smartplantcare.model.DashboardModel;
-import org.example.smartplantcare.view.ChartPanel;
+import org.example.smartplantcare.UIComponents.ChartPanel;
 import org.example.smartplantcare.view.DashboardView;
 
 public class DashboardController {
