@@ -118,7 +118,7 @@ public class DBConnection {
         return measurements;
     }
 
-    public Measurement queryOneMeasurement(String query) {
+    public Measurement getOneMeasurement(String query) {
         if (connection == null) {
             open();
         }
