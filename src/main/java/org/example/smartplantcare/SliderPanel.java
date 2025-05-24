@@ -1,5 +1,6 @@
 package org.example.smartplantcare;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -70,10 +71,13 @@ public class SliderPanel extends VBox {
         tempToolTip.setShowDelay(Duration.millis(100));
 
         VBox sliderBox = new VBox(
-                new HBox(label("Light"), sliderLight, valueLight, hspace(10), lightInfoIcon),
-                new HBox(label("Temp"), sliderTemp, valueTemp, hspace(10), tempInfoIcon),
-                new HBox(label("Water"), sliderWater,valueWater, hspace(10), waterInfoIcon));
+                label("Threshold Values"),
+                vspace(10),
+                new HBox(label("Light"), lightInfoIcon, sliderLight, valueLight, hspace(10)),
+                new HBox(label("Temp"), tempInfoIcon, sliderTemp, valueTemp, hspace(10)),
+                new HBox(label("Water"), waterInfoIcon, sliderWater,valueWater, hspace(10)));
         sliderBox.setPrefSize(600, 150);
+        sliderBox.setAlignment(Pos.CENTER);
 
         HBox buttonBox = new HBox(hspace(400), buttonProfile, buttonSaveProfile, hspace(50));
         buttonBox.setPrefSize(600, 50);
