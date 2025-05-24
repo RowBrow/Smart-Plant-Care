@@ -2,9 +2,6 @@ package org.example.smartplantcare.model;
 
 import org.example.smartplantcare.database.DBConnection;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class AdvancedModeModel {
 
     //Connection with DB
@@ -20,7 +17,7 @@ public class AdvancedModeModel {
 
     public void getLatestMeasurement() {
 
-        Measurement measurement = db.queryOneMeasurement("SELECT * FROM measurement where device_id = '" + currentDeviceId + "' ORDER BY timestamp DESC LIMIT 1");
+        Measurement measurement = db.getOneMeasurement("SELECT * FROM measurement where device_id = '" + currentDeviceId + "' ORDER BY timestamp DESC LIMIT 1");
         if (measurement != null) {
             currentLight = measurement.light();
             currentTemp = measurement.temp();

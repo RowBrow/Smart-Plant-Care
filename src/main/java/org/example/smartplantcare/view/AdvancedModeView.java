@@ -1,7 +1,8 @@
 package org.example.smartplantcare.view;
 
 import javafx.scene.layout.VBox;
-import org.example.smartplantcare.SliderPanel;
+import org.example.smartplantcare.UIComponents.SliderPanel;
+import org.example.smartplantcare.UIComponents.StatusPanel;
 
 public class AdvancedModeView extends VBox {
     public StatusPanel statusPanel;

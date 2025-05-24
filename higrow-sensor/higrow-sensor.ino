@@ -26,7 +26,7 @@ const int POWER_PIN = 34;
 const int LIGHT_PIN = 33;
 
 // Configure pins for output LEDs
-const int LIGHT_LED_PIN = 16; 
+const int LIGHT_LED_PIN = 5; 
 const int WATER_LED_PIN = 17; 
 
 // Initialize DHT sensor.

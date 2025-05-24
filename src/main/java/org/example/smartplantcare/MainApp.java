@@ -8,6 +8,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.example.smartplantcare.UIComponents.SideBar;
 import org.example.smartplantcare.controller.AdvancedModeController;
 import org.example.smartplantcare.controller.DashboardController;
 import org.example.smartplantcare.database.SPCMqttCallback;

@@ -1,4 +1,4 @@
-package org.example.smartplantcare;
+package org.example.smartplantcare.UIComponents;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -6,15 +6,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.beans.value.ObservableValue;
-import javafx.beans.value.ChangeListener;
 import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import static org.example.smartplantcare.HelperMethods.*;
+import static org.example.smartplantcare.UIComponents.HelperMethods.*;
 
-import java.awt.*;
 import java.awt.TextField;
 import java.util.List;
 
